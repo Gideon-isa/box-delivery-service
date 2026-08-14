@@ -26,10 +26,10 @@ public final class Item extends AggregateRoot<ItemId> {
         return build(ItemId.generate(), rawName, createdBy, weightGrams, rawCode, ItemStatus.UNASSIGNED, null);
     }
 
-//    public static Result<Item, DomainError> reconstitute(
-//            ItemId id, String rawName, int weightGrams, String rawCode, ItemStatus status, BoxId boxId) {
-//        return build(id, rawName, weightGrams, rawCode, status, boxId);
-//    }
+    public static Result<Item, DomainError> reconstitute(
+            ItemId id, String rawName, int weightGrams, String rawCode, ItemStatus status, BoxId boxId, UUID createdBy) {
+        return build(id, rawName, createdBy, weightGrams, rawCode, status, boxId);
+    }
 
     private static Result<Item, DomainError> build(
             ItemId id,
@@ -90,12 +90,6 @@ public final class Item extends AggregateRoot<ItemId> {
         return status == ItemStatus.ASSIGNED;
     }
 
-    @Override
-    public ItemId getId() {
-        return this.getId();
-    }
-
-
     public ItemName getName() {
         return name;
     }
@@ -112,8 +106,8 @@ public final class Item extends AggregateRoot<ItemId> {
         return status;
     }
 
-    public BoxId getBoxId() {
-        return boxId;
+    public UUID getBoxId() {
+        return boxId.getValue();
     }
 
     @Override

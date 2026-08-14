@@ -21,7 +21,7 @@ public final class Battery implements ValueObject {
         return Result.success(new Battery(batteryLevelPercentage));
     }
 
-    protected byte getPercentage() {
+    public byte getPercentage() {
         return batteryLevelPercentage;
     }
 

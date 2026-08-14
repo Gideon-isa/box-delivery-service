@@ -19,6 +19,10 @@ public final class ItemId implements ValueObject {
         return new ItemId(value);
     }
 
+    public UUID getValue() {
+        return  value;
+    }
+
     @Override
     public String toString() {
         return value.toString();
