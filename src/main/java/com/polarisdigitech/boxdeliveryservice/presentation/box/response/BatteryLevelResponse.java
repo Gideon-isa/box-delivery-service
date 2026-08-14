@@ -1,4 +1,4 @@
 package com.polarisdigitech.boxdeliveryservice.presentation.box.response;
 
-public class ItemResponse {
+public record BatteryLevelResponse (String batteryLevel){
 }

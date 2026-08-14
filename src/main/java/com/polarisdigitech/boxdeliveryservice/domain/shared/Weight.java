@@ -1,17 +1,18 @@
 package com.polarisdigitech.boxdeliveryservice.domain.shared;
 
 public class Weight implements ValueObject {
-    private final int grams;
+    private final double grams;
 
-    private Weight(int grams) {
+    private Weight(double grams) {
         this.grams = grams;
     }
 
-    public int getGrams() {
+
+    public double getGrams() {
         return grams;
     }
 
-    public static Result<Weight, DomainError> of(int grams) {
+    public static Result<Weight, DomainError> of(double grams) {
         if (grams <= 0) {
             return Result.failure(ValidationError.of("weight", "Weight must be greater than zero grams"));
         }

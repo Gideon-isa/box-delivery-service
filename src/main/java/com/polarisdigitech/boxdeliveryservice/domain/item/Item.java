@@ -27,7 +27,7 @@ public final class Item extends AggregateRoot<ItemId> {
     }
 
     public static Result<Item, DomainError> reconstitute(
-            ItemId id, String rawName, int weightGrams, String rawCode, ItemStatus status, BoxId boxId, UUID createdBy) {
+            ItemId id, String rawName, double weightGrams, String rawCode, ItemStatus status, BoxId boxId, UUID createdBy) {
         return build(id, rawName, createdBy, weightGrams, rawCode, status, boxId);
     }
 
@@ -35,7 +35,7 @@ public final class Item extends AggregateRoot<ItemId> {
             ItemId id,
             String rawName,
             UUID createdBy,
-            int weightGrams,
+            double weightGrams,
             String rawCode,
             ItemStatus status,
             BoxId boxId) {

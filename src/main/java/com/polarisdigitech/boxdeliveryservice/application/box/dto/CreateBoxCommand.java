@@ -1,4 +1,8 @@
 package com.polarisdigitech.boxdeliveryservice.application.box.dto;
 
-public class CreateBoxCommand {
+import com.polarisdigitech.boxdeliveryservice.domain.item.Item;
+
+import java.util.List;
+
+public record CreateBoxCommand(String txRef, double weightLimitGrams, double batteryPercentage) {
 }

@@ -30,7 +30,7 @@ public class ItemJpaEntity {
     private String name;
 
     @Column(name = "weight_grams", nullable = false)
-    private int weightGrams;
+    private double weightGrams;
 
     @Column(name = "code", nullable = false, length = 50)
     private String code;
@@ -68,7 +68,7 @@ public class ItemJpaEntity {
 
     public ItemJpaEntity(UUID id,
                          String name,
-                         int weightGrams,
+                         double weightGrams,
                          String code,
                          ItemStatusJpa status,
                          UUID boxId,
