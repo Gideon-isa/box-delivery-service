@@ -31,6 +31,9 @@ public final class ItemCode implements ValueObject {
         return Result.success(new ItemCode(trimmed));
     }
 
+    public String getCode() {
+        return value;
+    }
     @Override
     public String toString() {
         return value;

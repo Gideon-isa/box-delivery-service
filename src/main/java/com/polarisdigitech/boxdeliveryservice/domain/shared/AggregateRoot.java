@@ -9,7 +9,7 @@ public abstract class AggregateRoot<ID> extends AuditableEntity<ID> {
     protected AggregateRoot(ID id, UUID createdBy) {
         super(id, createdBy);
     }
-    public abstract ID getId();
+
 
     protected void raise(DomainEvent event) {
         domainEvents.add(event);
