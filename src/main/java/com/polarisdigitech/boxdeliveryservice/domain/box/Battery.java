@@ -8,20 +8,20 @@ import com.polarisdigitech.boxdeliveryservice.domain.shared.ValueObject;
 public final class Battery implements ValueObject {
     public static final byte MIN_LOADING_THRESHOLD = 25;
     private static final byte MAX_CAPACITY_LEVEL = 100;
-    private byte batteryLevelPercentage;
+    private double batteryLevelPercentage;
 
-    private Battery(byte batteryLevelPercentage) {
+    private Battery(double batteryLevelPercentage) {
         this.batteryLevelPercentage = batteryLevelPercentage;
     }
 
-    public static Result<Battery, DomainError> of(byte batteryLevelPercentage) {
+    public static Result<Battery, DomainError> of(double batteryLevelPercentage) {
         if (batteryLevelPercentage < 0 || batteryLevelPercentage > 100) {
             return Result.failure(ValidationError.of("batteryCapacity", "Battery capacity must be between 0 and 100"));
         }
         return Result.success(new Battery(batteryLevelPercentage));
     }
 
-    public byte getPercentage() {
+    public double getPercentage() {
         return batteryLevelPercentage;
     }
 

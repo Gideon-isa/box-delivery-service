@@ -18,9 +18,9 @@ public final class BoxLoadingPolicy {
     public static Result<Weight, DomainError> validate(
             WeightLimit weightLimit, Weight currentWeight, List<Weight> incomingWeights) {
 
-        int incomingGrams = incomingWeights
+        double incomingGrams = incomingWeights
                 .stream()
-                .mapToInt(Weight::getGrams)
+                .mapToDouble(Weight::getGrams)
                 .sum();
 
         Result<Weight, DomainError> weightResult =  Weight.of(incomingGrams);

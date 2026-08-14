@@ -21,14 +21,20 @@ public class JwtAuthorityEnrichingConverter implements Converter<Jwt, AbstractAu
 
     @Override
     public AbstractAuthenticationToken convert(Jwt jwt) {
-        UUID keycloakUserId = UUID.fromString(jwt.getSubject());
-        Set<String> authorities = roleLookupService.resolveAuthorities(keycloakUserId);
+        UUID keycloakUserId =
+                UUID.fromString(jwt.getSubject());
 
-        List<SimpleGrantedAuthority> grantedAuthorities = authorities
-                .stream()
-                .map(SimpleGrantedAuthority::new)
-                .toList();
+        Set<String> authorities =
+                roleLookupService.resolveAuthorities(keycloakUserId);
 
-        return new JwtAuthenticationToken(jwt, grantedAuthorities.isEmpty() ? List.of() : grantedAuthorities);
+        List<SimpleGrantedAuthority> grantedAuthorities =
+                authorities.stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .toList();
+
+        return new JwtAuthenticationToken(
+                jwt,
+                grantedAuthorities
+        );
     }
 }

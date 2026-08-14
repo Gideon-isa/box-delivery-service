@@ -29,7 +29,6 @@ import java.util.UUID;
                 query = "SELECT b FROM Box b WHERE b.state = IDLE "
                         + "AND b.batteryLevel >= 25")
 })
-
 public class BoxJpaEntity {
     @Id
     private UUID id;
@@ -39,10 +38,10 @@ public class BoxJpaEntity {
 
     @Getter
     @Column(name = "weight_limit", nullable = false)
-    private int weightLimit;
+    private double weightLimit;
 
     @Column(name = "battery_level", nullable = false)
-    private byte batteryLevel;
+    private double batteryLevel;
 
     @Setter
     @Enumerated(EnumType.STRING)
@@ -51,7 +50,7 @@ public class BoxJpaEntity {
 
     @Setter
     @Column(name = "total_items_weight", nullable = false)
-    private int totalItemsWeight;
+    private double totalItemsWeight;
 
     @Setter
     @Column(name = "is_deleted", nullable = false)
@@ -74,8 +73,8 @@ public class BoxJpaEntity {
     @Version
     private long version;
 
-    public BoxJpaEntity(UUID id, String txRef, int weightLimitGrams, byte batteryLevel,
-                        BoxStateJpa state, int totalItemsWeight, boolean isDeleted,
+    public BoxJpaEntity(UUID id, String txRef, double weightLimitGrams, double batteryLevel,
+                        BoxStateJpa state, double totalItemsWeight, boolean isDeleted,
                         Instant createdAt, UUID createdBy, Instant modifiedAt, UUID modifiedBy) {
         this.id = id;
         this.txRef = txRef;

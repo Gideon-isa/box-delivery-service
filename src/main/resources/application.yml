@@ -1,0 +1,58 @@
+spring:
+  application:
+    name: box-delivery-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/boxdelivery
+    username: boxdelivery
+    password: boxdelivery
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate   # schema is owned by Flyway, never by Hibernate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # jwk-set-uri only (no issuer-uri): avoids the classic Keycloak-in-Docker
+          # issuer mismatch, where the "iss" claim differs depending on whether the
+          # token was requested via the host port or the container-network hostname.
+          # Trade-off documented in README — signature/expiry are still fully
+          # validated; the "iss" claim itself is not cross-checked.
+          jwk-set-uri: http://localhost:8081/realms/boxdelivery/protocol/openid-connect/certs
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    root: INFO
+    com.acme.boxdelivery: DEBUG
+    org.springframework.security: INFO

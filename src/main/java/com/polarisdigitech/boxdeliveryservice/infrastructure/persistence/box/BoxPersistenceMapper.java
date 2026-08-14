@@ -3,7 +3,6 @@ package com.polarisdigitech.boxdeliveryservice.infrastructure.persistence.box;
 import com.polarisdigitech.boxdeliveryservice.domain.box.*;
 import com.polarisdigitech.boxdeliveryservice.domain.shared.DomainError;
 import com.polarisdigitech.boxdeliveryservice.domain.shared.Result;
-import com.polarisdigitech.boxdeliveryservice.domain.shared.Weight;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,7 +14,7 @@ public class BoxPersistenceMapper {
                 box.getWeightLimit().getValue(),
                 box.getBatteryLevel().getPercentage(),
                 BoxStateJpa.valueOf(box.getState().name()),
-                box.gettotalItemWeight().getGrams(),
+                box.getTotalItemWeight().getGrams(),
                 box.getDeleted(),
                 box.getCreatedAt(), box.getCreatedBy(), box.getModifiedAt(), box.getModifiedBy()
         );
@@ -23,7 +22,7 @@ public class BoxPersistenceMapper {
 
     public void updateJpaEntity(BoxJpaEntity jpaEntity, Box box) {
         jpaEntity.setState(BoxStateJpa.valueOf(box.getState().name()));
-        jpaEntity.setTotalItemsWeight(box.gettotalItemWeight().getGrams());
+        jpaEntity.setTotalItemsWeight(box.getTotalItemWeight().getGrams());
     }
 
     public Result<Box, DomainError> toDomain(BoxJpaEntity jpaEntity) {
