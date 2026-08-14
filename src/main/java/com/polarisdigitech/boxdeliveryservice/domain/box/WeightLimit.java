@@ -10,7 +10,7 @@ public class WeightLimit implements ValueObject {
         this.value = value;
     }
 
-    public static Result<WeightLimit, DomainError> of(short grams) {
+    public static Result<WeightLimit, DomainError> of(int grams) {
         if (grams <= 0) {
             return Result.failure(ValidationError.of(WeightLimit.class.getSimpleName(),
                     "Weight limit must be greater than zero grams"));
@@ -25,7 +25,9 @@ public class WeightLimit implements ValueObject {
         }
         return Result.success(new WeightLimit(weightResult.getValue()));
     }
-
+    public int getValue() {
+        return value.getGrams();
+    }
     public boolean isExceeded(Weight totalWeight) {
         return totalWeight.exceeds(totalWeight);
     }

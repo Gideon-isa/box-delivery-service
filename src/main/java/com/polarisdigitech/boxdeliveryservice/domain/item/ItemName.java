@@ -11,7 +11,6 @@ public final class ItemName implements ValueObject {
     private String value;
     private static final Pattern ALLOWED = Pattern.compile("^[A-Za-z0-9_-]+$");
     private static final int MAX_LENGTH = 100;
-
     private ItemName(String value) {
         this.value = value;
     }
@@ -29,6 +28,10 @@ public final class ItemName implements ValueObject {
                     "Item name may only contain letters, numbers, hyphen ('-') and underscore ('_')"));
         }
         return Result.success(new ItemName(trimmed));
+    }
+
+    public String getName() {
+        return value;
     }
 
     @Override

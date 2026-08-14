@@ -3,10 +3,11 @@ package com.polarisdigitech.boxdeliveryservice.domain.Delivery;
 import com.polarisdigitech.boxdeliveryservice.domain.shared.DomainError;
 import com.polarisdigitech.boxdeliveryservice.domain.shared.Result;
 import com.polarisdigitech.boxdeliveryservice.domain.shared.ValidationError;
+import com.polarisdigitech.boxdeliveryservice.domain.shared.ValueObject;
 
 import java.time.Instant;
 
-public final class FlightRoundTrip {
+public final class FlightRoundTrip implements ValueObject {
     private Instant departureTime;
     private Instant locationArrivalTime;
     private Instant returnedTime;

@@ -1,10 +1,7 @@
 package com.polarisdigitech.boxdeliveryservice.domain.box;
 
 import com.polarisdigitech.boxdeliveryservice.domain.item.Item;
-import com.polarisdigitech.boxdeliveryservice.domain.shared.AggregateRoot;
-import com.polarisdigitech.boxdeliveryservice.domain.shared.DomainError;
-import com.polarisdigitech.boxdeliveryservice.domain.shared.Result;
-import com.polarisdigitech.boxdeliveryservice.domain.shared.Weight;
+import com.polarisdigitech.boxdeliveryservice.domain.shared.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,14 +11,14 @@ public final class Box extends AggregateRoot<BoxId> {
     private final TxRef txRef;
     private final WeightLimit weightLimit;
     private BoxState state;
-    private Weight currentItemWeight;
+    private Weight totalItemsWeight;
     private Battery batteryLevel;
 
     private Box(BoxId boxId, UUID createdBy, TxRef txRef, BoxState state, Weight currentItemWeight, Battery batteryLevel, WeightLimit weightLimit) {
         super(boxId, createdBy);
         this.txRef = txRef;
         this.state = state;
-        this.currentItemWeight = currentItemWeight;
+        this.totalItemsWeight = currentItemWeight;
         this.weightLimit = weightLimit;
         this.batteryLevel = batteryLevel;
     }
@@ -50,6 +47,20 @@ public final class Box extends AggregateRoot<BoxId> {
         return Result.success(box);
     }
 
+    public static Result<Box, DomainError> reconstitute(
+            BoxId id, TxRef txRef, WeightLimit weightLimit, Battery batteryLevel,
+            BoxState state, int currentWeightGrams, UUID createdBy) {
+        if (id == null || txRef == null || weightLimit == null || batteryLevel == null || state == null) {
+            return Result.failure(ValidationError.of("box", "Box reconstitution requires all fields to be non-null"));
+        }
+        Result<Weight, DomainError> weightResult =  Weight.of(currentWeightGrams);
+        if (weightResult.isFailure()) {
+            return  Result.failure(weightResult.getError());
+        }
+
+        return Result.success(new Box(id, createdBy, txRef, state, weightResult.getValue(), batteryLevel, weightLimit));
+    }
+
     public Result<Box, DomainError> load(List<Item> itemsToLoad) {
         Result<BoxState, DomainError> transitionResult =
                 BoxStateTransition.validate(this.state, BoxState.LOADING, this.batteryLevel);
@@ -59,12 +70,12 @@ public final class Box extends AggregateRoot<BoxId> {
 
         List<Weight> incomingWeights = itemsToLoad.stream().map(Item::getWeight).toList();
         Result<Weight, DomainError> weightCheck =
-                BoxLoadingPolicy.validate(this.weightLimit, this.currentItemWeight, incomingWeights);
+                BoxLoadingPolicy.validate(this.weightLimit, this.totalItemsWeight, incomingWeights);
         if (weightCheck.isFailure()) {
             return Result.failure(weightCheck.getError());
         }
         this.state = BoxState.LOADING;
-        this.currentItemWeight = weightCheck.getValue();
+        this.totalItemsWeight = weightCheck.getValue();
         this.state = BoxState.LOADED;
 
         return Result.success(this);
@@ -83,10 +94,6 @@ public final class Box extends AggregateRoot<BoxId> {
         return this.state == BoxState.IDLE && !this.batteryLevel.isBelowLoadingThreshold();
     }
 
-    @Override
-    public BoxId getId() {
-        return this.getId();
-    }
 
     public TxRef getTxRef() {
         return txRef;
@@ -96,7 +103,7 @@ public final class Box extends AggregateRoot<BoxId> {
         return weightLimit;
     }
 
-    public Battery getBatteryCapacity() {
+    public Battery getBatteryLevel() {
         return batteryLevel;
     }
 
@@ -104,14 +111,14 @@ public final class Box extends AggregateRoot<BoxId> {
         return state;
     }
 
-    public Weight getCurrentWeight() {
-        return currentItemWeight;
+    public Weight gettotalItemWeight() {
+        return totalItemsWeight;
     }
 
     @Override
     public String toString() {
         return "Box{id=%s, txRef=%s, state=%s, battery=%s, weightLimit=%s, currentWeight=%s}"
-                .formatted(this.getId(), txRef, state, batteryLevel, weightLimit, currentItemWeight);
+                .formatted(this.getId(), txRef, state, batteryLevel, weightLimit, totalItemsWeight);
     }
 
 
