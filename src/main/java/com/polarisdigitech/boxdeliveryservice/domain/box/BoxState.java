@@ -1,4 +1,10 @@
 package com.polarisdigitech.boxdeliveryservice.domain.box;
 
-public class BoxState {
+public enum BoxState {
+    IDLE,
+    LOADING,
+    LOADED,
+    DELIVERING,
+    DELIVERED,
+    RETURNING
 }
