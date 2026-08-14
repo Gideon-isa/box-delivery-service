@@ -5,10 +5,11 @@ import com.polarisdigitech.boxdeliveryservice.domain.item.Item;
 import com.polarisdigitech.boxdeliveryservice.domain.item.ItemId;
 import com.polarisdigitech.boxdeliveryservice.domain.item.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-
+@Component
 @RequiredArgsConstructor
 public class ItemRepositoryAdapter implements ItemRepository {
 

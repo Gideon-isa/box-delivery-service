@@ -8,6 +8,7 @@ public class BoxId implements ValueObject {
     private UUID value;
 
     private BoxId(UUID value) {
+        this.value = value;
     }
 
     public UUID getValue() {

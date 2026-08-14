@@ -14,15 +14,14 @@ public final class Box extends AggregateRoot<BoxId> {
     private Weight totalItemsWeight;
     private Battery batteryLevel;
 
-    private Box(BoxId boxId, UUID createdBy, TxRef txRef, BoxState state, Weight currentItemWeight, Battery batteryLevel, WeightLimit weightLimit) {
+    private Box(BoxId boxId, UUID createdBy, TxRef txRef, BoxState state, Battery batteryLevel, WeightLimit weightLimit) {
         super(boxId, createdBy);
         this.txRef = txRef;
         this.state = state;
-        this.totalItemsWeight = currentItemWeight;
         this.weightLimit = weightLimit;
         this.batteryLevel = batteryLevel;
     }
-    public static Result<Box, DomainError> create(String rawTxRef, short weightLimitGrams, byte batteryPercentage, Weight currentItemWeight, UUID createdBy) {
+    public static Result<Box, DomainError> create(String rawTxRef, double weightLimitGrams, double batteryPercentage, UUID createdBy) {
         Result<TxRef, DomainError> txRefResult = TxRef.of(rawTxRef);
         if (txRefResult.isFailure()) {
             return Result.failure(txRefResult.getError());
@@ -41,7 +40,6 @@ public final class Box extends AggregateRoot<BoxId> {
                 createdBy,
                 txRefResult.getValue(),
                 BoxState.IDLE,
-                currentItemWeight,
                 batteryResult.getValue(),
                 weightLimitResult.getValue());
         return Result.success(box);
@@ -49,7 +47,7 @@ public final class Box extends AggregateRoot<BoxId> {
 
     public static Result<Box, DomainError> reconstitute(
             BoxId id, TxRef txRef, WeightLimit weightLimit, Battery batteryLevel,
-            BoxState state, int currentWeightGrams, UUID createdBy) {
+            BoxState state, double currentWeightGrams, UUID createdBy) {
         if (id == null || txRef == null || weightLimit == null || batteryLevel == null || state == null) {
             return Result.failure(ValidationError.of("box", "Box reconstitution requires all fields to be non-null"));
         }
@@ -58,7 +56,7 @@ public final class Box extends AggregateRoot<BoxId> {
             return  Result.failure(weightResult.getError());
         }
 
-        return Result.success(new Box(id, createdBy, txRef, state, weightResult.getValue(), batteryLevel, weightLimit));
+        return Result.success(new Box(id, createdBy, txRef, state, batteryLevel, weightLimit));
     }
 
     public Result<Box, DomainError> load(List<Item> itemsToLoad) {
@@ -111,7 +109,7 @@ public final class Box extends AggregateRoot<BoxId> {
         return state;
     }
 
-    public Weight gettotalItemWeight() {
+    public Weight getTotalItemWeight() {
         return totalItemsWeight;
     }
 
@@ -120,7 +118,5 @@ public final class Box extends AggregateRoot<BoxId> {
         return "Box{id=%s, txRef=%s, state=%s, battery=%s, weightLimit=%s, currentWeight=%s}"
                 .formatted(this.getId(), txRef, state, batteryLevel, weightLimit, totalItemsWeight);
     }
-
-
 
 }
