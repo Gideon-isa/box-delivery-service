@@ -26,11 +26,6 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          # jwk-set-uri only (no issuer-uri): avoids the classic Keycloak-in-Docker
-          # issuer mismatch, where the "iss" claim differs depending on whether the
-          # token was requested via the host port or the container-network hostname.
-          # Trade-off documented in README — signature/expiry are still fully
-          # validated; the "iss" claim itself is not cross-checked.
           jwk-set-uri: http://localhost:8081/realms/boxdelivery/protocol/openid-connect/certs
 
 server:
