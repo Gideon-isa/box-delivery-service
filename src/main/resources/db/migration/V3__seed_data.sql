@@ -1,9 +1,9 @@
 INSERT INTO boxes (id, tx_ref, weight_limit, battery_level, state,
                    total_items_weight, is_deleted, created_at, created_by, version) VALUES
-                                                                                              ('aaaaaaaa-0000-0000-0000-000000000001', 'BOX-0001', 500, 90, 'IDLE',       0,   false, CURRENT_TIMESTAMP, '00000000-0000-0000-0000-000000000000', 0),
-                                                                                              ('aaaaaaaa-0000-0000-0000-000000000002', 'BOX-0002', 300, 60, 'IDLE',       0,   false, CURRENT_TIMESTAMP, '00000000-0000-0000-0000-000000000000', 0),
-                                                                                              ('aaaaaaaa-0000-0000-0000-000000000003', 'BOX-0003', 500, 15, 'IDLE',       0,   false, CURRENT_TIMESTAMP, '00000000-0000-0000-0000-000000000000', 0),   -- below 25% battery: NOT available for loading
-                                                                                              ('aaaaaaaa-0000-0000-0000-000000000004', 'BOX-0004', 250, 70, 'DELIVERING', 200, false, CURRENT_TIMESTAMP, '00000000-0000-0000-0000-000000000000', 0);
+                                                                                              ('aaaaaaaa-0000-0000-0000-000000000001', 'BOX-0001', 500, 90, 'IDLE',       120,   false, CURRENT_TIMESTAMP, '00000000-0000-0000-0000-000000000000', 0),
+                                                                                              ('aaaaaaaa-0000-0000-0000-000000000002', 'BOX-0002', 500, 60, 'IDLE',       120,   false, CURRENT_TIMESTAMP, '00000000-0000-0000-0000-000000000000', 0),
+                                                                                              ('aaaaaaaa-0000-0000-0000-000000000003', 'BOX-0003', 500, 15, 'IDLE',       120,   false, CURRENT_TIMESTAMP, '00000000-0000-0000-0000-000000000000', 0),   -- below 25% battery: NOT available for loading
+                                                                                              ('aaaaaaaa-0000-0000-0000-000000000004', 'BOX-0004', 250, 70, 'DELIVERING', 120, false, CURRENT_TIMESTAMP, '00000000-0000-0000-0000-000000000000', 0);
 
 -- Preloaded, unassigned items -- ready to be loaded into a box via POST /boxes/{id}/load
 INSERT INTO items (id, name, weight_grams, code, status, box_id,

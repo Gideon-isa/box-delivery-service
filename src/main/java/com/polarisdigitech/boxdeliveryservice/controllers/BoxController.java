@@ -1,0 +1,101 @@
+package com.polarisdigitech.boxdeliveryservice.controllers;
+
+import com.polarisdigitech.boxdeliveryservice.box.dto.BoxView;
+import com.polarisdigitech.boxdeliveryservice.box.dto.CreateBoxCommand;
+import com.polarisdigitech.boxdeliveryservice.box.dto.ItemView;
+import com.polarisdigitech.boxdeliveryservice.box.dto.LoadBoxCommand;
+import com.polarisdigitech.boxdeliveryservice.box.dto.response.LoadBoxResponse;
+import com.polarisdigitech.boxdeliveryservice.box.usecases.*;
+import com.polarisdigitech.boxdeliveryservice.shared.DomainError;
+import com.polarisdigitech.boxdeliveryservice.shared.Result;
+import com.polarisdigitech.boxdeliveryservice.box.dto.request.CreateBoxRequest;
+import com.polarisdigitech.boxdeliveryservice.box.dto.request.LoadBoxRequest;
+import com.polarisdigitech.boxdeliveryservice.box.dto.response.BatteryLevelResponse;
+import com.polarisdigitech.boxdeliveryservice.box.dto.response.BoxResponse;
+import com.polarisdigitech.boxdeliveryservice.item.dto.response.ItemResponse;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.List;
+import java.util.UUID;
+
+import static com.polarisdigitech.boxdeliveryservice.controllers.ErrorResponse.toErrorResponse;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/boxes")
+public class BoxController {
+
+    private final CreateBoxUseCase createBoxUseCase;
+    private final LoadBoxUseCase loadBoxUseCase;
+    private final GetAvailableBoxesUseCase getAvailableBoxesUseCase;
+    private final GetBatteryLevelUseCase getBatteryLevelUseCase;
+    private final GetLoadedItemUseCase getLoadedItemsUseCase;
+
+
+    @PostMapping
+    public ResponseEntity<?> createBox(@Valid @RequestBody CreateBoxRequest request,
+                                       UriComponentsBuilder uriBuilder) {
+        CreateBoxCommand command = new CreateBoxCommand(
+                request.txRef(), request.weightLimitGrams(), request.batteryPercentage());
+
+
+        Result<BoxView, DomainError> result = createBoxUseCase.execute(command);
+        if (result.isFailure()) {
+            return toErrorResponse(result.getError());
+        }
+
+        BoxView created = result.getValue();
+        return ResponseEntity
+                .created(uriBuilder.path("/api/v1/boxes/{id}").build(created.id()))
+                .body(BoxResponse.from(created));
+    }
+
+    @PostMapping("/{boxId}/load")
+    public ResponseEntity<?> loadBox(@PathVariable UUID boxId, @Valid @RequestBody LoadBoxRequest request) {
+        Result<LoadBoxResponse, DomainError> result =
+                loadBoxUseCase.execute(new LoadBoxCommand(boxId, request.itemIds()));
+        if (result.isFailure()) {
+            return toErrorResponse(result.getError());
+        }
+        return ResponseEntity.ok(result.getValue());
+    }
+
+    @GetMapping("/{boxId}/items")
+    public ResponseEntity<?> getLoadedItems(@PathVariable UUID boxId) {
+        Result<List<ItemView>, DomainError> result = getLoadedItemsUseCase.execute(boxId);
+        if (result.isFailure()) {
+            return toErrorResponse(result.getError());
+        }
+
+        List<ItemResponse> items = result.getValue().stream().map(ItemResponse::from).toList();
+        return ResponseEntity.ok(items);
+    }
+
+    @GetMapping("/available")
+
+    public ResponseEntity<List<BoxResponse>> getAvailableBoxes() {
+        List<BoxResponse> boxes = getAvailableBoxesUseCase
+                .execute()
+                .stream()
+                .map(BoxResponse::from)
+                .toList();
+        return ResponseEntity.ok(boxes);
+    }
+
+    @GetMapping("/{boxId}/battery")
+    public ResponseEntity<?> getBatteryLevel(@PathVariable UUID boxId) {
+        Result<String, DomainError> result = getBatteryLevelUseCase.execute(boxId);
+        if (result.isFailure()) {
+            return toErrorResponse(result.getError());
+        }
+        return ResponseEntity.ok(new BatteryLevelResponse(result.getValue()));
+    }
+}
+
+

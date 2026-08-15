@@ -13,6 +13,9 @@ CREATE TABLE boxes (
                        version                   BIGINT NOT NULL DEFAULT 0
 );
 
+CREATE INDEX idx_boxes_id ON boxes (id);
+CREATE INDEX idx_boxes_tx_ref ON boxes (tx_ref);
+
 CREATE INDEX idx_boxes_state_battery ON boxes (state, battery_level);
 
 -- Items (own aggregate, referenced by box_id, not embedded)
@@ -20,7 +23,7 @@ CREATE TABLE items (
                        id           UUID PRIMARY KEY,
                        name         VARCHAR(100) NOT NULL,
                        weight_grams DOUBLE PRECISION NOT NULL CHECK (weight_grams > 0),
-                       code         VARCHAR(50) NOT NULL,
+                       code         VARCHAR(50) NOT NULL UNIQUE,
                        status       VARCHAR(20) NOT NULL,
                        box_id       UUID REFERENCES boxes (id) ON DELETE SET NULL,
                        is_deleted   BOOLEAN NOT NULL DEFAULT false,
@@ -31,6 +34,8 @@ CREATE TABLE items (
                        version      BIGINT NOT NULL DEFAULT 0
 );
 
+CREATE INDEX idx_items_id ON items (id);
+CREATE INDEX idx_items_code ON items (code);
 CREATE INDEX idx_items_box_id ON items (box_id);
 CREATE INDEX idx_items_status ON items (status);
 
@@ -54,6 +59,7 @@ CREATE TABLE deliveries (
 );
 
 CREATE INDEX idx_deliveries_box_id ON deliveries (box_id);
+CREATE INDEX idx_deliveries_id ON deliveries (id);
 
 -- Delivery -> Item references (plain @ElementCollection, no identity of its own)
 CREATE TABLE delivery_items (
