@@ -1,0 +1,24 @@
+package com.polarisdigitech.boxdeliveryservice.box.domain;
+
+import com.polarisdigitech.boxdeliveryservice.shared.ValueObject;
+
+import java.util.UUID;
+
+public class BoxId implements ValueObject {
+    private UUID value;
+
+    private BoxId(UUID value) {
+        this.value = value;
+    }
+
+    public UUID getValue() {
+        return value;
+    }
+    public static BoxId generate() {
+        return new BoxId(UUID.randomUUID());
+    }
+
+    public static BoxId of(UUID value) {
+        return new BoxId(value);
+    }
+}
