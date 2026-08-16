@@ -16,7 +16,7 @@ import java.util.UUID;
 @NamedQueries({
         @NamedQuery(
                 name = "ItemEntity.findByBoxId",
-                query = "SELECT i FROM ItemEntity i WHERE i.boxId = :boxId ORDER BY i.name"),
+                query = "SELECT i FROM ItemEntity i WHERE i.boxId = :boxId AND i.status = :status ORDER BY i.name"),
         @NamedQuery(
                 name = "ItemEntity.findAllByIds",
                 query = "SELECT i FROM ItemEntity i WHERE i.id IN :ids"),
@@ -56,7 +56,7 @@ public class ItemJpaEntity {
     private ItemStatusJpa status;
 
     @Setter
-    @Column(name = "box_id")
+    @Column(name = "box_id", nullable = true)
     private UUID boxId;
 
     @Setter

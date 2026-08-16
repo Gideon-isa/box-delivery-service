@@ -1,10 +1,7 @@
 package com.polarisdigitech.boxdeliveryservice.db.delivery;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.Instant;
 import java.util.List;
@@ -12,6 +9,7 @@ import java.util.UUID;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Entity(name = "Delivery")
 @Table(name = "deliveries")
 @NamedQueries({
@@ -27,8 +25,23 @@ public class DeliveryJpaEntity {
     @Id
     private UUID id;
 
-    @Column(name = "location_distance", nullable = false)
-    private double locationDistance;
+    @Column(name = "destination_name", nullable = false)
+    private String destinationName;
+
+    @Column(name = "dispatched_location_latitude", nullable = false)
+    private double dispatchedLocationLatitude;
+
+    @Column(name = "dispatched_location_longitude", nullable = false)
+    private double dispatchedLocationLongitude;
+
+    @Column(name = "destination_latitude", nullable = false)
+    private double destinationLatitude;
+
+    @Column(name = "destination_longitude", nullable = false)
+    private double destinationLongitude;
+
+    @Column(name = "destination_distance", nullable = false)
+    private double destinationDistance;
 
     @Column(name = "box_set_speed", nullable = false)
     private double boxSetSpeed;
@@ -36,7 +49,7 @@ public class DeliveryJpaEntity {
     @Column(name = "box_id", nullable = false)
     private UUID boxId;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "delivery_items", joinColumns = @JoinColumn(name = "delivery_id"))
     @Column(name = "item_id", nullable = false)
     private List<UUID> itemIds;
@@ -44,13 +57,16 @@ public class DeliveryJpaEntity {
     @Column(name = "start_time", nullable = false)
     private Instant startTime;
 
+    @Column(name = "estimated_arrival_time", nullable = false)
+    private Instant estimatedArrivalTime;
+
     @Setter
     @Column(name = "arrival_time")
     private Instant arrivalTime;
 
-    @Setter
-    @Column(name = "returned_time")
-    private Instant returnedTime;
+//    @Setter
+//    @Column(name = "returned_time")
+//    private Instant returnedTime;
 
     @Setter
     @Column(name = "is_delivered", nullable = false)
@@ -81,24 +97,43 @@ public class DeliveryJpaEntity {
     @Version
     private long version;
 
-    public DeliveryJpaEntity(UUID id, double locationDistance, double boxSetSpeed, UUID boxId,
-                             List<UUID> itemIds, Instant startTime, Instant arrivalTime, Instant returnedTime,
-                             boolean isDelivered, boolean isReturned, boolean isDeleted,
-                             Instant createdAt, UUID createdBy, Instant modifiedAt, UUID modifiedBy) {
-        this.id = id;
-        this.locationDistance = locationDistance;
-        this.boxSetSpeed = boxSetSpeed;
-        this.boxId = boxId;
-        this.itemIds = itemIds;
-        this.startTime = startTime;
-        this.arrivalTime = arrivalTime;
-        this.returnedTime = returnedTime;
-        this.isDelivered = isDelivered;
-        this.isReturned = isReturned;
-        this.isDeleted = isDeleted;
-        this.createdAt = createdAt;
-        this.createdBy = createdBy;
-        this.modifiedAt = modifiedAt;
-        this.modifiedBy = modifiedBy;
-    }
+//    public DeliveryJpaEntity(
+//            UUID id,
+//            String destinationName,
+//            double dispatchedLocationLatitude,
+//            double dispatchedLocationLongitude,
+//            double destinationLatitude,
+//            double destinationLongitude,
+//            double destinationDistance,
+//            double boxSetSpeed,
+//            UUID boxId,
+//            List<UUID> itemIds,
+//            Instant startTime,
+//            Instant arrivalTime,
+//            Instant returnedTime,
+//            boolean isDelivered,
+//            boolean isReturned,
+//            boolean isDeleted,
+//            Instant createdAt,
+//            UUID createdBy,
+//            Instant modifiedAt,
+//            UUID modifiedBy) {
+//
+//        this.id = id;
+//        this.destinationName = destinationName;
+//        this.destinationDistance = destinationDistance;
+//        this.boxSetSpeed = boxSetSpeed;
+//        this.boxId = boxId;
+//        this.itemIds = itemIds;
+//        this.startTime = startTime;
+//        this.arrivalTime = arrivalTime;
+//        this.returnedTime = returnedTime;
+//        this.isDelivered = isDelivered;
+//        this.isReturned = isReturned;
+//        this.isDeleted = isDeleted;
+//        this.createdAt = createdAt;
+//        this.createdBy = createdBy;
+//        this.modifiedAt = modifiedAt;
+//        this.modifiedBy = modifiedBy;
+//    }
 }

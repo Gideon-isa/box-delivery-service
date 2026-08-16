@@ -15,7 +15,7 @@ public interface ItemRepository {
 
     List<Item> findAllByIds(List<ItemId> ids);
 
-    List<Item> findByBoxId(BoxId boxId);
+    List<Item> findByBoxId(BoxId boxId, ItemStatus status);
 
     boolean existsByCode(ItemCode code);
 

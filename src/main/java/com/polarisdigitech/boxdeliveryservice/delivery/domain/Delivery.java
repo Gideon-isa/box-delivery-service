@@ -10,43 +10,66 @@ import java.util.List;
 import java.util.UUID;
 
 public final class Delivery extends AggregateRoot<UUID> {
-    private final double locationDistance;
+    private final String destinationName;
+    private final double dispatchedLocationLatitude;
+    private final double dispatchedLocationLongitude;
+    private final double destinationLatitude;
+    private final double destinationLongitude;
+    private final double destinationDistance;
     private final double boxSetSpeed;
     private final BoxId boxId;
     private final List<ItemId> ItemIds;
     private final Instant startTime;
+    private final Instant estimatedArrivalTime;
     private Instant arrivalTime;
-    private Instant returnedTime;
     private boolean isDelivered;
     private boolean isReturned;
 
-    private Delivery(UUID id,
-                    UUID createdBy,
-                    double locationDistance,
-                    double boxSetSpeed,
-                    BoxId boxId,
-                    List<ItemId> itemsIds,
-                    Instant startTime,
-                    Instant arrivalTime,
-                    Instant returnedTime,
-                    boolean isDelivered,
-                    boolean isReturned) {
+    private Delivery(
+                     UUID id,
+                     String remoteLocationName,
+                     double dispatchedLatitude,
+                     double dispatchedLongitude,
+                     double destinationLatitude,
+                     double destinationLongitude,
+                     double locationDistance,
+                     double boxSetSpeed,
+                     BoxId boxId,
+                     List<ItemId> itemsIds,
+                     Instant startTime,
+                     Instant estimatedArrivalTime,
+                     Instant arrivalTime,
+                     boolean isDelivered,
+                     boolean isReturned,
+                     UUID createdBy
+                     ) {
         super(id, createdBy);
-        this.locationDistance = locationDistance;
+        this.destinationDistance = locationDistance;
+        this.destinationName = remoteLocationName;
+        this.dispatchedLocationLatitude = dispatchedLatitude;
+        this.dispatchedLocationLongitude = dispatchedLongitude;
+        this.destinationLatitude = destinationLatitude;
+        this.destinationLongitude = destinationLongitude;
         this.boxSetSpeed = boxSetSpeed;
         this.boxId = boxId;
         this.ItemIds = itemsIds;
         this.startTime = startTime;
         this.arrivalTime = arrivalTime;
-        this.returnedTime = returnedTime;
+        this.estimatedArrivalTime = estimatedArrivalTime;
     }
 
     public static Result<Delivery, DomainError> create(
-            UUID createdBy,
+            String remoteLocationName,
+            double dispatchedLatitude,
+            double dispatchedLongitude,
+            double destinationLatitude,
+            double destinationLongitude,
             double locationDistance,
+            Instant estimatedArrivalTime,
             double boxSetSpeed,
             BoxId boxId,
-            List<ItemId> itemIds) {
+            List<ItemId> itemIds,
+            UUID createdBy) {
 
         if (boxId == null) {
             return Result.failure(ValidationError.of("boxId", "boxId can not be empty or null"));
@@ -63,28 +86,61 @@ public final class Delivery extends AggregateRoot<UUID> {
         }
         return Result.success(new Delivery(
                 UUID.randomUUID(),
-                createdBy,
+                remoteLocationName,
+                dispatchedLatitude,
+                dispatchedLongitude,
+                destinationLatitude,
+                destinationLongitude,
                 locationDistance,
                 boxSetSpeed,
                 boxId,
                 itemIds,
                 Instant.now(),
-                null,
+                estimatedArrivalTime,
                 null,
                 false,
-                false));
-
+                false,
+                createdBy));
     }
 
     public static Result<Delivery, DomainError> reconstitute(
-            UUID id, UUID createdBy, double locationDistance, double boxSetSpeed, BoxId boxId,
-            List<ItemId> itemIds, Instant startTime, Instant arrivalTime, Instant returnedTime,
-            boolean isDelivered, boolean isReturned) {
+            UUID id,
+            String remoteLocationName,
+            double dispatchedLatitude,
+            double dispatchedLongitude,
+            double destinationLatitude,
+            double destinationLongitude,
+            double locationDistance,
+            double boxSetSpeed,
+            BoxId boxId,
+            List<ItemId> itemIds,
+            Instant startTime,
+            Instant arrivalTime,
+            Instant estimatedArrivalTime,
+            boolean isDelivered,
+            boolean isReturned,
+            UUID createdBy) {
+
         if (id == null || boxId == null) {
             return Result.failure(ValidationError.of("delivery", "Delivery reconstitution requires id and boxId"));
         }
-        return Result.success(new Delivery(UUID.randomUUID(), createdBy, locationDistance, boxSetSpeed, boxId,
-                itemIds, startTime, arrivalTime, returnedTime, isDelivered, isReturned));
+        return Result.success(new Delivery(
+                id,
+                remoteLocationName,
+                dispatchedLatitude,
+                dispatchedLongitude,
+                destinationLatitude,
+                destinationLongitude,
+                locationDistance,
+                boxSetSpeed,
+                boxId,
+                itemIds,
+                startTime,
+                estimatedArrivalTime,
+                arrivalTime,
+                isDelivered,
+                isReturned,
+                createdBy));
     }
 
     public Result<Delivery, DomainError> markAsReturned() {
@@ -94,30 +150,60 @@ public final class Delivery extends AggregateRoot<UUID> {
         if (isReturned) {
             return Result.failure(BusinessRuleViolation.of("ALREADY_RETURNED", "Delivery " + getId() + " is already marked as returned"));
         }
-        this.returnedTime = Instant.now();
+
         this.isReturned = true;
         return Result.success(this);
     }
 
     public Result<Delivery, DomainError> markAsDelivered() {
         if (isDelivered) {
-            return Result.failure(BusinessRuleViolation.of("ALREADY_DELIVERED", "Delivery " + getId() + " is already marked as delivered"));
+            return Result.failure(BusinessRuleViolation.of(
+                    "ALREADY_DELIVERED", "Delivery " + getId() + " is already marked as delivered"));
         }
         if (isReturned) {
-            return Result.failure(BusinessRuleViolation.of("ALREADY_RETURNED", "Cannot deliver a delivery that has already been returned"));
+            return Result.failure(BusinessRuleViolation.of(
+                    "ALREADY_RETURNED",
+                    "Cannot deliver a delivery that has already been returned"));
         }
         this.arrivalTime = Instant.now();
         this.isDelivered = true;
+
         return Result.success(this);
     }
 
-    public double getLocationDistance() { return locationDistance; }
+    public static  Result<Double, DomainError> calculateDistance(
+                                                            double currentLatitude,
+                                                           double currentLongitude,
+                                                           double destinationLatitude,
+                                                           double destinationLongitude) {
+
+        var currentLocationResult = Coordinates.of(currentLatitude, currentLongitude);
+        var targetLocationResult = Coordinates.of(destinationLatitude, destinationLongitude);
+
+        if (currentLocationResult.isFailure()) {
+            return Result.failure(currentLocationResult.getError());
+        }
+
+        if (targetLocationResult.isFailure()) {
+            return Result.failure(targetLocationResult.getError());
+        }
+
+        double distance = currentLocationResult.getValue().distanceToKm(targetLocationResult.getValue());
+        return Result.success(distance);
+    }
+
+    public String getDestinationName() {return destinationName;}
+    public double getDispatchedLocationLatitude() {return dispatchedLocationLatitude;}
+    public double getDispatchedLocationLongitude() {return dispatchedLocationLongitude;}
+    public double getDestinationLatitude() { return destinationLatitude;}
+    public double getDestinationLongitude() {return destinationLongitude;}
+    public double getDestinationDistance() { return destinationDistance; }
     public double getBoxSetSpeed() { return boxSetSpeed; }
     public BoxId getBoxId() { return boxId; }
     public List<ItemId> getItemIds() { return ItemIds; }
     public Instant getStartTime() { return startTime; }
     public Instant getArrivalTime() { return arrivalTime; }
-    public Instant getReturnedTime() { return returnedTime; }
+    public Instant getEstimatedArrivalTime() {return estimatedArrivalTime;}
     public boolean isDelivered() { return isDelivered; }
     public boolean isReturned() { return isReturned; }
 

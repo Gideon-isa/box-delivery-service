@@ -1,12 +1,9 @@
 package com.polarisdigitech.boxdeliveryservice.item.services;
 
-import com.polarisdigitech.boxdeliveryservice.box.domain.Battery;
-import com.polarisdigitech.boxdeliveryservice.box.domain.Box;
-import com.polarisdigitech.boxdeliveryservice.box.dto.ItemView;
+import com.polarisdigitech.boxdeliveryservice.item.dto.ItemView;
 import com.polarisdigitech.boxdeliveryservice.item.domain.Item;
 import com.polarisdigitech.boxdeliveryservice.item.domain.ItemId;
 import com.polarisdigitech.boxdeliveryservice.item.domain.ItemRepository;
-import com.polarisdigitech.boxdeliveryservice.item.dto.GetItemCommand;
 import com.polarisdigitech.boxdeliveryservice.item.usecases.GetItemUseCase;
 import com.polarisdigitech.boxdeliveryservice.shared.DomainError;
 import com.polarisdigitech.boxdeliveryservice.shared.NotFoundError;
@@ -33,7 +30,6 @@ public class GetItemService implements GetItemUseCase {
         }
 
         Item item = itemOptional.get();
-        ItemView.from(item);
         return Result.success(ItemView.from(item));
     }
 }

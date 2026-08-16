@@ -1,4 +1,4 @@
-package com.polarisdigitech.boxdeliveryservice.shared.services;
+package com.polarisdigitech.boxdeliveryservice.delivery.domainservices;
 
 import com.polarisdigitech.boxdeliveryservice.delivery.domain.FlightEstimate;
 import com.polarisdigitech.boxdeliveryservice.delivery.domain.FlightRoundTrip;
@@ -19,28 +19,16 @@ public final class DispatchService {
             return Result.failure(flightResult.getError());
         }
 
-        // Return Flight
-        Result<FlightEstimate, DomainError> returnedFlightResult =  FlightEstimator.calculateEstimatedDeliveryTime(startTime, distance, boxSpeed, BoxConstants.BOX_WEIGHT);
-        if (returnedFlightResult.isFailure()) {
-            return Result.failure(flightResult.getError());
-        }
-
         Duration flightEstimate =  flightResult.getValue().estimatedTravelTime();
-        Duration returnArrivalTime =  returnedFlightResult.getValue().estimatedTravelTime();
-
         Instant locationArrivalTime = Instant.now().plus(flightEstimate);
-        Instant expectedReturnedTime = Instant.now().plus(returnArrivalTime);
         Instant departureTime = Instant.now();
-        Result<FlightRoundTrip, DomainError> roundTripResult =  FlightRoundTrip.build(locationArrivalTime, expectedReturnedTime, departureTime);
+
+        Result<FlightRoundTrip, DomainError> roundTripResult =  FlightRoundTrip.build(locationArrivalTime,  departureTime);
         if (roundTripResult.isFailure()) {
             return Result.failure(roundTripResult.getError());
         }
+        
         return Result.success(roundTripResult.getValue());
-
-
     }
-
-    //Private Method
-
 
 }

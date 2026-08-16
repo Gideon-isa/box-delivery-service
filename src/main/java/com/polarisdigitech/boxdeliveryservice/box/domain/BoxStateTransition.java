@@ -41,4 +41,5 @@ public final class BoxStateTransition {
 
         return Result.success(target);
     }
+
 }

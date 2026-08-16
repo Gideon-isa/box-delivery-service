@@ -26,11 +26,16 @@ public class ItemPersistenceMapper {
     public void updateJpaEntity(ItemJpaEntity jpaEntity, Item item) {
         jpaEntity.setStatus(ItemStatusJpa.valueOf(item.getStatus().name()));
         jpaEntity.setBoxId(item.getBoxId() == null ? null : item.getBoxId());
+        jpaEntity.setModifiedAt(item.getModifiedAt());
+        jpaEntity.setModifiedBy(item.getModifiedBy());
     }
 
     public Result<Item, DomainError> toDomain(ItemJpaEntity jpaEntity) {
-        BoxId boxId = jpaEntity.getBoxId() == null ? null : BoxId.of(jpaEntity.getBoxId());
-        var status = jpaEntity.getStatus().name();
+        BoxId boxId = jpaEntity.getBoxId() == null
+                ? null
+                : BoxId.of(jpaEntity.getBoxId());
+
+        ItemStatus status = ItemStatus.valueOf(jpaEntity.getStatus().name());
 
         UUID createdBy = jpaEntity.getCreatedBy();
         return Item.reconstitute(
@@ -38,7 +43,7 @@ public class ItemPersistenceMapper {
                 jpaEntity.getName(),
                 jpaEntity.getWeightGrams(),
                 jpaEntity.getCode(),
-                ItemStatus.valueOf(jpaEntity.getStatus().name()),
+                status,
                 boxId,
                 createdBy
         );

@@ -1,6 +1,6 @@
 package com.polarisdigitech.boxdeliveryservice.item.services;
 
-import com.polarisdigitech.boxdeliveryservice.box.dto.ItemView;
+import com.polarisdigitech.boxdeliveryservice.item.dto.ItemView;
 import com.polarisdigitech.boxdeliveryservice.item.domain.Item;
 import com.polarisdigitech.boxdeliveryservice.item.domain.ItemRepository;
 import com.polarisdigitech.boxdeliveryservice.item.domain.ItemStatus;
@@ -9,7 +9,6 @@ import com.polarisdigitech.boxdeliveryservice.shared.DomainError;
 import com.polarisdigitech.boxdeliveryservice.shared.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

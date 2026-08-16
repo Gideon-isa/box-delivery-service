@@ -1,6 +1,6 @@
 package com.polarisdigitech.boxdeliveryservice.box.usecases;
 
-import com.polarisdigitech.boxdeliveryservice.box.dto.ItemView;
+import com.polarisdigitech.boxdeliveryservice.item.dto.ItemView;
 import com.polarisdigitech.boxdeliveryservice.shared.DomainError;
 import com.polarisdigitech.boxdeliveryservice.shared.Result;
 
