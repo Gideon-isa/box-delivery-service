@@ -19,12 +19,15 @@ INSERT INTO items (id, name, weight_grams, code, status, box_id,
      'aaaaaaaa-0000-0000-0000-000000000004', false, CURRENT_TIMESTAMP, '00000000-0000-0000-0000-000000000000', 0);
 
 -- A delivery in progress for BOX-0004, carrying the assigned item above
-INSERT INTO deliveries (id, location_distance, box_set_speed, box_id, start_time,
-                        arrival_time, returned_time, is_delivered, is_returned,
-                        is_deleted, created_at, created_by, version) VALUES
-    ('cccccccc-0000-0000-0000-000000000001', 3.5, 25, 'aaaaaaaa-0000-0000-0000-000000000004',
-     CURRENT_TIMESTAMP, NULL, NULL, false, false, false, CURRENT_TIMESTAMP,
-     '00000000-0000-0000-0000-000000000000', 0);
+INSERT INTO deliveries (id, destination_name, dispatched_location_latitude, dispatched_location_longitude,
+                        destination_latitude, destination_longitude, destination_distance, box_set_speed,
+                        box_id, start_time, estimated_arrival_time, arrival_time,
+                        is_delivered, is_returned, is_deleted, created_at, created_by, version) VALUES
+    ('cccccccc-0000-0000-0000-000000000001', 'Victoria Island Office',
+     6.5244, 3.3792, 6.4550, 3.3841, 7.8, 25,
+     'aaaaaaaa-0000-0000-0000-000000000004', CURRENT_TIMESTAMP,
+     CURRENT_TIMESTAMP + INTERVAL '19 minutes', NULL,
+     false, false, false, CURRENT_TIMESTAMP, '00000000-0000-0000-0000-000000000000', 0);
 
 INSERT INTO delivery_items (delivery_id, item_id) VALUES
     ('cccccccc-0000-0000-0000-000000000001', 'bbbbbbbb-0000-0000-0000-000000000004');

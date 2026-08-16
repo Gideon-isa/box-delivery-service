@@ -10,23 +10,35 @@ import java.time.Instant;
 public final class FlightRoundTrip implements ValueObject {
     private Instant departureTime;
     private Instant locationArrivalTime;
-    private Instant returnedTime;
 
-   private FlightRoundTrip(Instant locationArrivalTime, Instant returnedTime, Instant departureTime) {
+   private FlightRoundTrip(Instant locationArrivalTime, Instant departureTime) {
        this.locationArrivalTime = locationArrivalTime;
-       this.returnedTime = returnedTime;
        this.departureTime = departureTime;
    }
-   public static Result<FlightRoundTrip, DomainError> build(Instant locationArrivalTime, Instant returnedTime, Instant departureTime) {
+   public static Result<FlightRoundTrip, DomainError> build(Instant locationArrivalTime,  Instant departureTime) {
        if (locationArrivalTime == null) {
            return Result.failure(ValidationError.of("locationArrivalTime", "locationArrivalTime can not be null"));
        }
-       if (returnedTime == null) {
-           return Result.failure(ValidationError.of("returnedTime", "returnedTime can not be null"));
-       }
+
        if (departureTime == null) {
            return Result.failure(ValidationError.of("departure", "departure can not be null"));
        }
-       return Result.success(new FlightRoundTrip(locationArrivalTime, returnedTime, departureTime));
+       return Result.success(new FlightRoundTrip(locationArrivalTime, departureTime));
    }
+
+    public Instant getDepartureTime() {
+        return departureTime;
+    }
+
+    public void setDepartureTime(Instant departureTime) {
+        this.departureTime = departureTime;
+    }
+
+    public Instant getLocationArrivalTime() {
+        return locationArrivalTime;
+    }
+
+    public void setLocationArrivalTime(Instant locationArrivalTime) {
+        this.locationArrivalTime = locationArrivalTime;
+    }
 }

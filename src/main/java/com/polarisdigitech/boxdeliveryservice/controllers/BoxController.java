@@ -2,7 +2,7 @@ package com.polarisdigitech.boxdeliveryservice.controllers;
 
 import com.polarisdigitech.boxdeliveryservice.box.dto.BoxView;
 import com.polarisdigitech.boxdeliveryservice.box.dto.CreateBoxCommand;
-import com.polarisdigitech.boxdeliveryservice.box.dto.ItemView;
+import com.polarisdigitech.boxdeliveryservice.item.dto.ItemView;
 import com.polarisdigitech.boxdeliveryservice.box.dto.LoadBoxCommand;
 import com.polarisdigitech.boxdeliveryservice.box.dto.response.LoadBoxResponse;
 import com.polarisdigitech.boxdeliveryservice.box.usecases.*;
@@ -15,9 +15,7 @@ import com.polarisdigitech.boxdeliveryservice.box.dto.response.BoxResponse;
 import com.polarisdigitech.boxdeliveryservice.item.dto.response.ItemResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 

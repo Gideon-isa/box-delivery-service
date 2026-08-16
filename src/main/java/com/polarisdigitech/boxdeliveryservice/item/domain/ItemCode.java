@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public final class ItemCode implements ValueObject {
     private String value;
-    private static final Pattern ALLOWED = Pattern.compile("^[A-Z0-9_]+$");
+    private static final Pattern ALLOWED = Pattern.compile("^[A-Z0-9_ -]+$");
     private static final int MAX_LENGTH = 50;
 
     private ItemCode(String value) {

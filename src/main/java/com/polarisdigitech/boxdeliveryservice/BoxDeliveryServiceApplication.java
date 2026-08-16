@@ -9,5 +9,4 @@ public class BoxDeliveryServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(BoxDeliveryServiceApplication.class, args);
     }
-
 }

@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface ItemJpaRepository extends JpaRepository<ItemJpaEntity, UUID> {
 
     @Query(name = "ItemEntity.findByBoxId")
-    List<ItemJpaEntity> findByBoxId(@Param("boxId") UUID boxId);
+    List<ItemJpaEntity> findByBoxId(@Param("boxId") UUID boxId, @Param("status") ItemStatusJpa status);
 
     @Query(name = "ItemEntity.findAllByIds")
     List<ItemJpaEntity> findAllByIds(@Param("ids") List<UUID> ids);

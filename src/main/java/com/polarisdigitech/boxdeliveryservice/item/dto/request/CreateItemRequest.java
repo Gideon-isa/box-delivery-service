@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 
 public record CreateItemRequest(
 
-         @Pattern(regexp = "^[a-zA-Z0-9_-]+$", message = "only letters, number, -, and _ are allowed")
+         @Pattern(regexp = "^[a-zA-Z0-9_ -]+$", message = "only letters, number, -, and _ are allowed")
         String name,
 
         @NotNull(message = "weightLimitGrams is required")
@@ -13,7 +13,7 @@ public record CreateItemRequest(
         Double weight,
 
         @NotNull(message = "code is required")
-        @Pattern(regexp = "^[A-Z]+$", message = "only upper case letter")
+        @Pattern(regexp = "^[A-Z0-9_ -]+$", message = "only upper case letter")
         String code
 ){
 

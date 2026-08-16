@@ -23,23 +23,17 @@ public class BoxRepositoryAdapter implements BoxRepository {
 
     @Override
     public Box save(Box box) {
+        UUID boxId = box.getId().getValue();
+        BoxJpaEntity jpaEntity = jpaRepository
+                .findById(boxId)
+                .map(existing -> {
+                    mapper.updateJpaEntity(existing, box);
+                    return existing;
+                })
+                .orElseGet(() -> mapper.toNewJpaEntity(box));
 
-        try {
-            UUID boxId = box.getId().getValue();
-            BoxJpaEntity jpaEntity = jpaRepository
-                    .findById(boxId)
-                    .map(existing -> {
-                        mapper.updateJpaEntity(existing, box);
-                        return existing;
-                    })
-                    .orElseGet(() -> mapper.toNewJpaEntity(box));
-
-            BoxJpaEntity saved = jpaRepository.save(jpaEntity);
-            return mapper.toDomain(saved).getValue();
-        }catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
+        BoxJpaEntity saved = jpaRepository.save(jpaEntity);
+        return mapper.toDomain(saved).getValue();
     }
 
     @Override

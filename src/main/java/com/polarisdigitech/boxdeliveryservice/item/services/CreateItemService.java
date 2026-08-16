@@ -1,15 +1,13 @@
 package com.polarisdigitech.boxdeliveryservice.item.services;
 
 import com.polarisdigitech.boxdeliveryservice.application.security.CurrentUser;
-import com.polarisdigitech.boxdeliveryservice.box.domain.BoxId;
-import com.polarisdigitech.boxdeliveryservice.box.dto.ItemView;
+import com.polarisdigitech.boxdeliveryservice.item.dto.ItemView;
 import com.polarisdigitech.boxdeliveryservice.item.domain.*;
 import com.polarisdigitech.boxdeliveryservice.item.dto.CreateItemCommand;
 import com.polarisdigitech.boxdeliveryservice.item.usecases.CreateItemUseCase;
 import com.polarisdigitech.boxdeliveryservice.shared.DomainError;
 import com.polarisdigitech.boxdeliveryservice.shared.Result;
 import com.polarisdigitech.boxdeliveryservice.shared.ValidationError;
-import com.polarisdigitech.boxdeliveryservice.shared.Weight;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -13,7 +13,13 @@ public final class Item extends AggregateRoot<ItemId> {
     private ItemStatus status;
     private BoxId boxId;
 
-    private Item(ItemId id, UUID createdBy, ItemName name, Weight weight, ItemCode code, ItemStatus status, BoxId boxId) {
+    private Item(ItemId id,
+                 UUID createdBy,
+                 ItemName name,
+                 Weight weight,
+                 ItemCode code,
+                 ItemStatus status,
+                 BoxId boxId) {
         super(id, createdBy);
         this.name = name;
         this.weight = weight;
@@ -22,12 +28,26 @@ public final class Item extends AggregateRoot<ItemId> {
         this.boxId = boxId;
     }
 
-    public static Result<Item, DomainError> create(String rawName, UUID createdBy, double weightGrams, String rawCode) {
-        return build(ItemId.generate(), rawName, createdBy, weightGrams, rawCode, ItemStatus.UNASSIGNED, null);
+    public static Result<Item, DomainError> create(String rawName,
+                                                   UUID createdBy,
+                                                   double weightGrams,
+                                                   String rawCode) {
+        return build(ItemId.generate(),
+                rawName,
+                createdBy,
+                weightGrams,
+                rawCode,
+                ItemStatus.UNASSIGNED,
+                null);
     }
 
-    public static Result<Item, DomainError> reconstitute(
-            ItemId id, String rawName, double weightGrams, String rawCode, ItemStatus status, BoxId boxId, UUID createdBy) {
+    public static Result<Item, DomainError> reconstitute(ItemId id,
+                                                         String rawName,
+                                                         double weightGrams,
+                                                         String rawCode,
+                                                         ItemStatus status,
+                                                         BoxId boxId,
+                                                         UUID createdBy) {
         return build(id, rawName, createdBy, weightGrams, rawCode, status, boxId);
     }
 
@@ -79,7 +99,6 @@ public final class Item extends AggregateRoot<ItemId> {
         return Result.success(this);
     }
 
-    /** Releases this item back to the unassigned pool (e.g. if a box load is reversed). */
     public Item unassign() {
         this.status = ItemStatus.UNASSIGNED;
         this.boxId = null;
@@ -107,7 +126,11 @@ public final class Item extends AggregateRoot<ItemId> {
     }
 
     public UUID getBoxId() {
+        if (boxId == null) {
+            return null;
+        }
         return boxId.getValue();
+
     }
 
     @Override
