@@ -1,4 +1,4 @@
-package com.polarisdigitech.boxdeliveryservice.box.dto;
+package com.polarisdigitech.boxdeliveryservice.item.dto;
 
 import com.polarisdigitech.boxdeliveryservice.item.domain.Item;
 

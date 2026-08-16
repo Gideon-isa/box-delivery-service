@@ -1,4 +1,4 @@
-package com.polarisdigitech.boxdeliveryservice.shared.services;
+package com.polarisdigitech.boxdeliveryservice.delivery.domainservices;
 
 import com.polarisdigitech.boxdeliveryservice.delivery.domain.FlightEstimate;
 import com.polarisdigitech.boxdeliveryservice.box.domain.BoxConstants;
@@ -30,7 +30,6 @@ public final class FlightEstimator {
         double effectiveSpeed = BoxConstants.MAX_SPEED * (1 - speedReduction);
         double travelTimeInHour = distance / effectiveSpeed;
         Duration travelTimeInDuration = Duration.ofSeconds((long) (travelTimeInHour * 3600));
-
         return Result.success(new FlightEstimate(effectiveSpeed + " km/h", travelTimeInDuration ));
     }
 }

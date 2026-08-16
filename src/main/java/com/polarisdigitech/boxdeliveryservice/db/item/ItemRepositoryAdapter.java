@@ -90,9 +90,9 @@ public class ItemRepositoryAdapter implements ItemRepository {
     }
 
     @Override
-    public List<Item> findByBoxId(BoxId boxId) {
+    public List<Item> findByBoxId(BoxId boxId, ItemStatus status) {
         return itemJpaRepository
-                .findByBoxId(boxId.getValue())
+                .findByBoxId(boxId.getValue(), ItemStatusJpa.valueOf(status.name()))
                 .stream()
                 .map(mapper::toDomain)
                 .filter(Result::isSuccess)

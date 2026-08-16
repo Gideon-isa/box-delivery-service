@@ -27,6 +27,7 @@ public class CreateBoxService implements CreateBoxUseCase {
     public Result<BoxView, DomainError> execute(CreateBoxCommand command) {
 
         //UUID userId = currentUser.getId();
+        UUID userId = UUID.randomUUID();
 
         Result<TxRef, DomainError> txRefResult = TxRef.of(command.txRef());
         if (txRefResult.isFailure()) {
@@ -39,7 +40,7 @@ public class CreateBoxService implements CreateBoxUseCase {
         }
 
         Result<Box, DomainError> boxResult =
-                Box.create(command.txRef(), command.weightLimitGrams(), command.batteryPercentage(), UUID.randomUUID());
+                Box.create(command.txRef(), command.weightLimitGrams(), command.batteryPercentage(), userId);
         if (boxResult.isFailure()) {
             return Result.failure(boxResult.getError());
         }

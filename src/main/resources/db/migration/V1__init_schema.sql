@@ -41,21 +41,27 @@ CREATE INDEX idx_items_status ON items (status);
 
 -- Deliveries
 CREATE TABLE deliveries (
-                            id                 UUID PRIMARY KEY,
-                            location_distance  DOUBLE PRECISION NOT NULL CHECK (location_distance > 0),
-                            box_set_speed       DOUBLE PRECISION NOT NULL CHECK (box_set_speed > 0),
-                            box_id             UUID NOT NULL REFERENCES boxes (id),
-                            start_time         TIMESTAMP NOT NULL,
-                            arrival_time       TIMESTAMP,
-                            returned_time      TIMESTAMP,
-                            is_delivered       BOOLEAN NOT NULL DEFAULT false,
-                            is_returned        BOOLEAN NOT NULL DEFAULT false,
-                            is_deleted         BOOLEAN NOT NULL DEFAULT false,
-                            created_at         TIMESTAMP NOT NULL,
-                            created_by         UUID NOT NULL,
-                            modified_at        TIMESTAMP,
-                            modified_by        UUID,
-                            version            BIGINT NOT NULL DEFAULT 0
+                            id                              UUID PRIMARY KEY,
+                            destination_name                VARCHAR(255) NOT NULL,
+                            dispatched_location_latitude    DOUBLE PRECISION NOT NULL CHECK (dispatched_location_latitude BETWEEN -90 AND 90),
+                            dispatched_location_longitude   DOUBLE PRECISION NOT NULL CHECK (dispatched_location_longitude BETWEEN -180 AND 180),
+                            destination_latitude            DOUBLE PRECISION NOT NULL CHECK (destination_latitude BETWEEN -90 AND 90),
+                            destination_longitude           DOUBLE PRECISION NOT NULL CHECK (destination_longitude BETWEEN -180 AND 180),
+                            destination_distance            DOUBLE PRECISION NOT NULL CHECK (destination_distance > 0),
+                            box_set_speed                   DOUBLE PRECISION NOT NULL CHECK (box_set_speed > 0),
+                            box_id                          UUID NOT NULL REFERENCES boxes (id),
+                            start_time                      TIMESTAMP NOT NULL,
+                            estimated_arrival_time          TIMESTAMP NOT NULL,
+                            arrival_time                    TIMESTAMP,
+                            returned_time                   TIMESTAMP,
+                            is_delivered                    BOOLEAN NOT NULL DEFAULT false,
+                            is_returned                     BOOLEAN NOT NULL DEFAULT false,
+                            is_deleted                      BOOLEAN NOT NULL DEFAULT false,
+                            created_at                      TIMESTAMP NOT NULL,
+                            created_by                      UUID NOT NULL,
+                            modified_at                     TIMESTAMP,
+                            modified_by                     UUID,
+                            version                         BIGINT NOT NULL DEFAULT 0
 );
 
 CREATE INDEX idx_deliveries_box_id ON deliveries (box_id);

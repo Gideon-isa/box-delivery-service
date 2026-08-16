@@ -2,7 +2,8 @@ package com.polarisdigitech.boxdeliveryservice.box.services;
 
 import com.polarisdigitech.boxdeliveryservice.box.domain.BoxId;
 import com.polarisdigitech.boxdeliveryservice.box.domain.BoxRepository;
-import com.polarisdigitech.boxdeliveryservice.box.dto.ItemView;
+import com.polarisdigitech.boxdeliveryservice.item.domain.ItemStatus;
+import com.polarisdigitech.boxdeliveryservice.item.dto.ItemView;
 import com.polarisdigitech.boxdeliveryservice.box.usecases.GetLoadedItemUseCase;
 import com.polarisdigitech.boxdeliveryservice.item.domain.ItemRepository;
 import com.polarisdigitech.boxdeliveryservice.shared.DomainError;
@@ -31,7 +32,7 @@ public class GetLoadedItemsService implements GetLoadedItemUseCase {
             return Result.failure(NotFoundError.of("Box", boxId.toString()));
         }
 
-        List<ItemView> items = itemRepository.findByBoxId(id).stream()
+        List<ItemView> items = itemRepository.findByBoxId(id, ItemStatus.ASSIGNED).stream()
                 .map(ItemView::from)
                 .toList();
         return Result.success(items);

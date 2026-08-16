@@ -1,6 +1,6 @@
 package com.polarisdigitech.boxdeliveryservice.controllers;
 
-import com.polarisdigitech.boxdeliveryservice.box.dto.ItemView;
+import com.polarisdigitech.boxdeliveryservice.item.dto.ItemView;
 import com.polarisdigitech.boxdeliveryservice.item.dto.CreateItemCommand;
 import com.polarisdigitech.boxdeliveryservice.item.dto.request.CreateItemRequest;
 import com.polarisdigitech.boxdeliveryservice.item.dto.response.ItemResponse;

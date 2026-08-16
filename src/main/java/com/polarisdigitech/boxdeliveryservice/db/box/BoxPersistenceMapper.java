@@ -5,6 +5,8 @@ import com.polarisdigitech.boxdeliveryservice.shared.DomainError;
 import com.polarisdigitech.boxdeliveryservice.shared.Result;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+
 @Component
 public class BoxPersistenceMapper {
     public BoxJpaEntity toNewJpaEntity(Box box) {
@@ -22,6 +24,8 @@ public class BoxPersistenceMapper {
     public void updateJpaEntity(BoxJpaEntity jpaEntity, Box box) {
         jpaEntity.setState(BoxStateJpa.valueOf(box.getState().name()));
         jpaEntity.setTotalItemsWeight(box.getTotalItemWeight().getGrams());
+        jpaEntity.setModifiedAt(Instant.now());
+        jpaEntity.setModifiedBy(box.getModifiedBy());
     }
 
     public Result<Box, DomainError> toDomain(BoxJpaEntity jpaEntity) {
