@@ -1,5 +1,6 @@
 package com.polarisdigitech.boxdeliveryservice.exception;
 
+import com.polarisdigitech.boxdeliveryservice.config.security.keycloak.KeycloakProvisioningException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -75,5 +76,14 @@ public class GlobalExceptionHandler {
                 .badRequest()
                 .body(problem);
 
+    }
+
+    @ExceptionHandler(KeycloakProvisioningException.class)
+    public ResponseEntity<ProblemDetail> handleKeycloakProvisioning(KeycloakProvisioningException ex) {
+        log.error("Keycloak provisioning failed", ex);
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+        problem.setTitle("SIGNUP_FAILED");
+        problem.setDetail(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(problem);
     }
 }

@@ -10,6 +10,7 @@ import com.polarisdigitech.boxdeliveryservice.item.usecases.GetAvailableItemsUse
 import com.polarisdigitech.boxdeliveryservice.item.usecases.GetItemUseCase;
 import com.polarisdigitech.boxdeliveryservice.shared.DomainError;
 import com.polarisdigitech.boxdeliveryservice.shared.Result;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 import java.util.UUID;
 
-import static com.polarisdigitech.boxdeliveryservice.controllers.ErrorResponse.toErrorResponse;
+import static com.polarisdigitech.boxdeliveryservice.exception.ErrorResponse.toErrorResponse;
 
 @RequiredArgsConstructor
 @RestController
@@ -31,6 +32,10 @@ public class ItemController {
     private final DeleteItemUseCase deleteItemUseCase;
     private final GetAvailableItemsUseCase availableItemsUseCase;
 
+    @Operation(
+            summary = "Create a new item",
+            description = "Creates a new item for delivery."
+    )
     @PostMapping
     public ResponseEntity<?> createItem(@Valid @RequestBody CreateItemRequest request, UriComponentsBuilder uriBuilder) {
         CreateItemCommand command = new CreateItemCommand(
@@ -46,6 +51,10 @@ public class ItemController {
                 .body(ItemResponse.from(created));
     }
 
+    @Operation(
+            summary = "Retrieves a new item",
+            description = "Returns a items that is available ."
+    )
     @GetMapping("/{id}")
     public ResponseEntity<?> getItem(@PathVariable UUID id) {
         Result<ItemView, DomainError> result = getItemUseCase.execute(id);
@@ -55,6 +64,10 @@ public class ItemController {
         return ResponseEntity.ok(ItemResponse.from(result.getValue()));
     }
 
+    @Operation(
+            summary = "Deletes an item",
+            description = "Delete an item."
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteItem(@PathVariable UUID id) {
         Result<Boolean, DomainError> result = deleteItemUseCase.execute(id);
@@ -64,6 +77,10 @@ public class ItemController {
         return ResponseEntity.ok(result);
     }
 
+    @Operation(
+            summary = "Retrieves available items not yet loaded",
+            description = "Retrieves items that are not yet loaded."
+    )
     @GetMapping("/available-items")
     public ResponseEntity<?> getAvailableItems() {
         Result<List<ItemView>, DomainError> result = availableItemsUseCase.execute();

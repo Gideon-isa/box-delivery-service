@@ -6,5 +6,5 @@ public enum BoxState {
     LOADED,
     DELIVERING,
     DELIVERED,
-    RETURNING
+    RETURNING,
 }

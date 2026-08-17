@@ -95,6 +95,7 @@ public final class Box extends AggregateRoot<BoxId> {
         return Result.success(this);
     }
 
+
     public boolean isAvailableForLoading() {
         return this.state == BoxState.IDLE && !this.batteryLevel.isBelowLoadingThreshold();
     }
