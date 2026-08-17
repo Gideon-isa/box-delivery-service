@@ -16,7 +16,6 @@ public class PermissionJpaEntity {
     private String description;
 
     protected PermissionJpaEntity() {
-        // JPA
     }
 
     public PermissionJpaEntity(String code, String description) {

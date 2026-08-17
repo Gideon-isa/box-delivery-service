@@ -1,4 +1,4 @@
-package com.polarisdigitech.boxdeliveryservice.controllers;
+package com.polarisdigitech.boxdeliveryservice.exception;
 
 import com.polarisdigitech.boxdeliveryservice.shared.DomainError;
 import org.springframework.http.ProblemDetail;

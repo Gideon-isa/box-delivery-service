@@ -51,3 +51,12 @@ logging:
     root: INFO
     com.acme.boxdelivery: DEBUG
     org.springframework.security: INFO
+
+keycloak:
+  admin:
+    server-url: http://localhost:8081
+    realm: boxdelivery
+    client-id: box-delivery-admin
+    client-secret: box-delivery-admin-secret
+    token-url: ${keycloak.admin.server-url}/realms/${keycloak.admin.realm}/protocol/openid-connect/token
+    users-url: ${keycloak.admin.server-url}/admin/realms/${keycloak.admin.realm}/users

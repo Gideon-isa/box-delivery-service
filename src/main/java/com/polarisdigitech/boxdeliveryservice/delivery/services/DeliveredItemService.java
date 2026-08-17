@@ -7,7 +7,6 @@ import com.polarisdigitech.boxdeliveryservice.box.domain.BoxRepository;
 import com.polarisdigitech.boxdeliveryservice.box.domain.BoxState;
 import com.polarisdigitech.boxdeliveryservice.delivery.domain.Delivery;
 import com.polarisdigitech.boxdeliveryservice.delivery.domain.DeliveryRepository;
-import com.polarisdigitech.boxdeliveryservice.delivery.dto.DeliveredItemCommand;
 import com.polarisdigitech.boxdeliveryservice.delivery.dto.response.DeliveredItemResponse;
 import com.polarisdigitech.boxdeliveryservice.delivery.usecases.DeliveredItemUseCase;
 import com.polarisdigitech.boxdeliveryservice.item.domain.Item;
@@ -36,15 +35,16 @@ public class DeliveredItemService implements DeliveredItemUseCase {
 
     @Transactional
     @Override
-    public Result<DeliveredItemResponse, DomainError> execute(DeliveredItemCommand command) {
+    public Result<DeliveredItemResponse, DomainError> execute(UUID id) {
 
         // TODO plugin the keycloak
         //UUID userId = currentUser.getId();
         UUID userId = UUID.randomUUID();
 
-        Optional<Delivery> OptionalDelivery = deliveryRepository.findById(command.deliveryId());
+        Optional<Delivery> OptionalDelivery = deliveryRepository.findById(id);
         if (OptionalDelivery.isEmpty()) {
-            return Result.failure(NotFoundError.of("delivery not found", command.deliveryId().toString()));
+            return Result.failure(NotFoundError.of(
+                    "delivery not found", id.toString()));
         }
 
         Delivery delivery = OptionalDelivery.get();
@@ -52,7 +52,8 @@ public class DeliveredItemService implements DeliveredItemUseCase {
 
         Optional<Box> boxOptional = boxRepository.findById(boxId);
         if (boxOptional.isEmpty()) {
-            return Result.failure(NotFoundError.of("delivery box record can not be found", boxId.toString()));
+            return Result.failure(NotFoundError.of(
+                    "delivery box record can not be found", boxId.toString()));
         }
 
         Box box = boxOptional.get();
