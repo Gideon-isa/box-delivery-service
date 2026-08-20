@@ -16,8 +16,10 @@ import com.polarisdigitech.boxdeliveryservice.box.dto.response.BoxResponse;
 import com.polarisdigitech.boxdeliveryservice.item.dto.response.ItemResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -45,7 +47,7 @@ public class BoxController {
             description = "Creates a new box for delivery."
     )
     @PostMapping
-    public ResponseEntity<?> createBox(@Valid @RequestBody CreateBoxRequest request,
+    public ResponseEntity<?> createBox(@Validated({Default.class}) @Valid @RequestBody CreateBoxRequest request,
                                        UriComponentsBuilder uriBuilder) {
         CreateBoxCommand command = new CreateBoxCommand(
                 request.txRef(), request.weightLimitGrams(), request.batteryPercentage());

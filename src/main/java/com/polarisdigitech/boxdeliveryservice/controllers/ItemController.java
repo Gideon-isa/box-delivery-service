@@ -12,8 +12,10 @@ import com.polarisdigitech.boxdeliveryservice.shared.DomainError;
 import com.polarisdigitech.boxdeliveryservice.shared.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -37,7 +39,7 @@ public class ItemController {
             description = "Creates a new item for delivery."
     )
     @PostMapping
-    public ResponseEntity<?> createItem(@Valid @RequestBody CreateItemRequest request, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<?> createItem(@Validated({Default.class}) @Valid @RequestBody CreateItemRequest request, UriComponentsBuilder uriBuilder) {
         CreateItemCommand command = new CreateItemCommand(
                 request.name(), request.weight(), request.code());
 

@@ -14,8 +14,11 @@ import com.polarisdigitech.boxdeliveryservice.shared.DomainError;
 import com.polarisdigitech.boxdeliveryservice.shared.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import jakarta.validation.groups.Default;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -39,7 +42,7 @@ public class DeliveryController {
             description = "Starts a delivering process."
     )
     @PostMapping
-    public ResponseEntity<?> startFlight(@Valid @RequestBody DispatchDeliveryRequest request,
+    public ResponseEntity<?> startFlight(@Validated({Default.class}) @Valid @RequestBody DispatchDeliveryRequest request,
                                        UriComponentsBuilder uriBuilder) {
         DispatchBoxCommand command = new DispatchBoxCommand(
                 request.boxId(),
@@ -95,7 +98,7 @@ public class DeliveryController {
             description = "Returns an estimated flight time"
     )
     @PostMapping("/flight-estimate")
-    public ResponseEntity<?> estimateFlight(@Valid @RequestBody EstimateFlightRequest request) {
+    public ResponseEntity<?> estimateFlight(@Validated({Default.class}) @RequestBody EstimateFlightRequest request) {
         Result<EstimateFlightResponse, DomainError> result =
                 estimateFlightUseCase.execute(
                         new EstimateFlightCommand(
