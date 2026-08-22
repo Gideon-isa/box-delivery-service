@@ -15,7 +15,7 @@ public final class Delivery extends AggregateRoot<UUID> {
     private final double dispatchedLocationLongitude;
     private final double destinationLatitude;
     private final double destinationLongitude;
-    private final double destinationDistance;
+    private final double destinationDistance; //km
     private final double boxSetSpeed;
     private final BoxId boxId;
     private final List<ItemId> ItemIds;

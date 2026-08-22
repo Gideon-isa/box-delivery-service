@@ -24,7 +24,6 @@ public final class FlightEstimator {
             return Result.failure(ValidationError.of("boxSpeed", "box speed can not be greater than the max speed"));
         }
         double itemTotalWeightInKilogram = itemTotalWeight / 1000;
-
         double payloadRatio = itemTotalWeightInKilogram / BoxConstants.MAX_PAYLOAD;
         double speedReduction = payloadRatio * BoxConstants.MAX_SPEED_REDUCTION;
         double effectiveSpeed = BoxConstants.MAX_SPEED * (1 - speedReduction);

@@ -26,8 +26,7 @@ public class CreateBoxService implements CreateBoxUseCase {
     @Transactional
     public Result<BoxView, DomainError> execute(CreateBoxCommand command) {
 
-        //UUID userId = currentUser.getId();
-        UUID userId = UUID.randomUUID();
+        UUID userId = currentUser.getId();
 
         Result<TxRef, DomainError> txRefResult = TxRef.of(command.txRef());
         if (txRefResult.isFailure()) {

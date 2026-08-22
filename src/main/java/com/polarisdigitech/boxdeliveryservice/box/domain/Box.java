@@ -100,6 +100,14 @@ public final class Box extends AggregateRoot<BoxId> {
         return this.state == BoxState.IDLE && !this.batteryLevel.isBelowLoadingThreshold();
     }
 
+    public Box updateBatteryAmountUsed(double distancedCoveredInKm) {
+        var consumptionPercentPerKilometer  = this.batteryLevel.getBatteryConsumptionPercentPerKilometer();
+        var totalBatterPercentageUsed = consumptionPercentPerKilometer * distancedCoveredInKm;
+        var currentLevel = this.batteryLevel.getPercentage() - (consumptionPercentPerKilometer * distancedCoveredInKm);
+        this.batteryLevel.setPercentage((byte) currentLevel);
+        return this;
+    }
+
 
     public TxRef getTxRef() {
         return txRef;

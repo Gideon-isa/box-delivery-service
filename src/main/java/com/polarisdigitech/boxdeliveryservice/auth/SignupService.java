@@ -11,17 +11,16 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class SignupService {
 
-    private static final String DEFAULT_ROLE = "VIEWER";
 
     private final KeycloakUserProvisioningService keycloakUserProvisioningService;
     private final UserRoleAssignmentRepository userRoleAssignmentRepository;
 
     @Transactional
-    public SignupResponse signup(SignupRequest request) {
+    public SignupResponse signup(SignupRequest request, Role role) {
         var keycloakUserId = keycloakUserProvisioningService.createUser(
                 request.username(), request.email(), request.password());
 
-        userRoleAssignmentRepository.save(new UserRoleAssignmentJpaEntity(keycloakUserId, DEFAULT_ROLE));
-        return new SignupResponse(keycloakUserId, request.username(), request.email(), DEFAULT_ROLE);
+        userRoleAssignmentRepository.save(new UserRoleAssignmentJpaEntity(keycloakUserId, role.name()));
+        return new SignupResponse(keycloakUserId, request.username(), request.email(), role.name());
     }
 }

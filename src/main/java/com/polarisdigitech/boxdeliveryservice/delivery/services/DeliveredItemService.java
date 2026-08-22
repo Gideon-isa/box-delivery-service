@@ -37,9 +37,7 @@ public class DeliveredItemService implements DeliveredItemUseCase {
     @Override
     public Result<DeliveredItemResponse, DomainError> execute(UUID id) {
 
-        // TODO plugin the keycloak
-        //UUID userId = currentUser.getId();
-        UUID userId = UUID.randomUUID();
+        UUID userId = currentUser.getId();
 
         Optional<Delivery> OptionalDelivery = deliveryRepository.findById(id);
         if (OptionalDelivery.isEmpty()) {
@@ -62,11 +60,12 @@ public class DeliveredItemService implements DeliveredItemUseCase {
             return Result.failure(updatedBoxResult.getError());
         }
 
-        List<Item> loadedItems = itemRepository.findByBoxId(boxId, ItemStatus.ASSIGNED);
-
         List<Item> deliveredItems = itemRepository.findByBoxId(boxId, ItemStatus.ASSIGNED)
                 .stream()
-                .map(Item::unassign)
+                .peek(item -> {
+                    item.unassign();
+                    item.markModified(userId);
+                })
                 .toList();
 
         // update delivery record
@@ -75,9 +74,11 @@ public class DeliveredItemService implements DeliveredItemUseCase {
             return Result.failure(deliveredResult.getError());
         }
 
-        box.markModified(userId);
         delivery.markModified(userId);
-        deliveredItems.forEach(i -> i.markModified(userId));
+        var deliveryDistance = delivery.getDestinationDistance();
+
+        box.updateBatteryAmountUsed(deliveryDistance);
+        box.markModified(userId);
 
         itemRepository.saveAll(deliveredItems);
         boxRepository.save(box);

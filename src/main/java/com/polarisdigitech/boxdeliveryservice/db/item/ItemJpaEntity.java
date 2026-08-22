@@ -30,7 +30,7 @@ import java.util.UUID;
 
         @NamedQuery(
                 name = "ItemEntity.deleteItemById",
-                query = "UPDATE ItemEntity i SET i.isDeleted = true WHERE i.id = :id"),
+                query = "UPDATE ItemEntity i SET i.isDeleted = true, i.modifiedBy = :modifiedBy WHERE i.id = :id"),
 
         @NamedQuery(
                 name = "ItemEntity.findAllAvailable",

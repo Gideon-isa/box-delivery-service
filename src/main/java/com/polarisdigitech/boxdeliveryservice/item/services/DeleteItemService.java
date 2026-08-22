@@ -1,5 +1,6 @@
 package com.polarisdigitech.boxdeliveryservice.item.services;
 
+import com.polarisdigitech.boxdeliveryservice.application.security.CurrentUser;
 import com.polarisdigitech.boxdeliveryservice.item.domain.ItemId;
 import com.polarisdigitech.boxdeliveryservice.item.domain.ItemRepository;
 import com.polarisdigitech.boxdeliveryservice.item.usecases.DeleteItemUseCase;
@@ -17,15 +18,15 @@ import java.util.UUID;
 public class DeleteItemService implements DeleteItemUseCase {
 
     private final ItemRepository itemRepository;
+    private final CurrentUser currentUser;
 
     @Override
     @Transactional
     public Result<Boolean, DomainError> execute(UUID id) {
-        //UUID userId = currentUser.getId();
-        UUID userId = UUID.randomUUID();
-
+        UUID userId = currentUser.getId();
         ItemId itemId = ItemId.of(id);
-        var isDeleted = itemRepository.deleteItemById(itemId);
+
+        var isDeleted = itemRepository.deleteItemById(itemId, currentUser.getId());
         if (!isDeleted) {
             return Result.failure(InternalServerError.of("500", "something went wrong..."));
         }

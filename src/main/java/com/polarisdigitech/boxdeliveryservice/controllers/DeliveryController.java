@@ -18,6 +18,7 @@ import jakarta.validation.groups.Default;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -42,6 +43,7 @@ public class DeliveryController {
             description = "Starts a delivering process."
     )
     @PostMapping
+    @PreAuthorize("hasAuthority('PERMISSION_BOX_DISPATCH')")
     public ResponseEntity<?> startFlight(@Validated({Default.class}) @Valid @RequestBody DispatchDeliveryRequest request,
                                        UriComponentsBuilder uriBuilder) {
         DispatchBoxCommand command = new DispatchBoxCommand(
@@ -69,6 +71,7 @@ public class DeliveryController {
             description = "Returns a delivery record."
     )
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('PERMISSION_DELIVERY_GET')")
     public ResponseEntity<?> getDelivery(@PathVariable UUID id) {
         Result<DeliveryView, DomainError> result =
                 deliveryUseCase.execute(id);
@@ -84,6 +87,7 @@ public class DeliveryController {
             description = "Box has reached the destination and marks the box as delivered."
     )
     @GetMapping("/{id}/delivered")
+    @PreAuthorize("hasAuthority('PERMISSION_DELIVERY_DELIVERED')")
     public ResponseEntity<?> getFlight(@PathVariable UUID id) {
         Result<DeliveredItemResponse, DomainError> result =
                 deliveredItemUseCase.execute(id);
@@ -98,6 +102,7 @@ public class DeliveryController {
             description = "Returns an estimated flight time"
     )
     @PostMapping("/flight-estimate")
+    @PreAuthorize("hasAuthority('PERMISSION_DELIVERY_ESTIMATE')")
     public ResponseEntity<?> estimateFlight(@Validated({Default.class}) @RequestBody EstimateFlightRequest request) {
         Result<EstimateFlightResponse, DomainError> result =
                 estimateFlightUseCase.execute(
@@ -114,6 +119,4 @@ public class DeliveryController {
         }
         return ResponseEntity.ok(result.getValue());
     }
-
-
 }

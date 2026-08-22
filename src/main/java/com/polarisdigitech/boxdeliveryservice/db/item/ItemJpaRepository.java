@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,7 +24,7 @@ public interface ItemJpaRepository extends JpaRepository<ItemJpaEntity, UUID> {
     boolean existsByCode(@Param("code") String code);
 
     @Query(name = "ItemEntity.deleteById")
-    boolean deleteItemById(@Param("id") UUID id);
+    boolean deleteItemById(@Param("id") UUID id, @Param("modifiedBy") UUID userId, @Param("modifiedAt") Instant timeModified);
 
     @Query(name = "ItemEntity.findAllAvailable")
     List<ItemJpaEntity> findAllAvailable(@Param("status") ItemStatusJpa status);

@@ -25,8 +25,7 @@ public class CreateItemService implements CreateItemUseCase {
     @Override
     @Transactional
     public Result<ItemView, DomainError> execute(CreateItemCommand command) {
-        //UUID userId = currentUser.getId();
-        UUID userId = UUID.randomUUID();
+        UUID userId = currentUser.getId();
 
          Result<ItemCode, DomainError> codeResult =  ItemCode.of(command.code());
          if (codeResult.isFailure()) {

@@ -6,6 +6,7 @@ import com.polarisdigitech.boxdeliveryservice.shared.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -106,8 +107,8 @@ public class ItemRepositoryAdapter implements ItemRepository {
     }
 
     @Override
-    public boolean deleteItemById(ItemId id) {
-        return itemJpaRepository.deleteItemById(id.getValue());
+    public boolean deleteItemById(ItemId id, UUID modifiedBy) {
+        return itemJpaRepository.deleteItemById(id.getValue(), modifiedBy, Instant.now());
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.polarisdigitech.boxdeliveryservice.shared.ValueObject;
 public final class Battery implements ValueObject {
     public static final byte MIN_LOADING_THRESHOLD = 25;
     private static final byte MAX_CAPACITY_LEVEL = 100;
+    private static final double BATTERY_CONSUMPTION_PERCENT_PER_KILOMETER = 5.0;
     private double batteryLevelPercentage;
 
     private Battery(double batteryLevelPercentage) {
@@ -21,6 +22,9 @@ public final class Battery implements ValueObject {
         return Result.success(new Battery(batteryLevelPercentage));
     }
 
+    public double getBatteryConsumptionPercentPerKilometer() {
+        return BATTERY_CONSUMPTION_PERCENT_PER_KILOMETER;
+    }
     public double getPercentage() {
         return batteryLevelPercentage;
     }

@@ -19,6 +19,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -47,6 +48,7 @@ public class BoxController {
             description = "Creates a new box for delivery."
     )
     @PostMapping
+    @PreAuthorize("hasAuthority('PERMISSION_BOX_CREATE')")
     public ResponseEntity<?> createBox(@Validated({Default.class}) @Valid @RequestBody CreateBoxRequest request,
                                        UriComponentsBuilder uriBuilder) {
         CreateBoxCommand command = new CreateBoxCommand(
@@ -69,6 +71,7 @@ public class BoxController {
             description = "Loading of items on into the box."
     )
     @PostMapping("/{boxId}/load")
+    @PreAuthorize("hasAuthority('PERMISSION_BOX_LOAD')")
     public ResponseEntity<?> loadBox(@PathVariable UUID boxId, @Valid @RequestBody LoadBoxRequest request) {
         Result<LoadBoxResponse, DomainError> result =
                 loadBoxUseCase.execute(new LoadBoxCommand(boxId, request.itemIds()));
@@ -83,6 +86,7 @@ public class BoxController {
             description = "This returns list of items loaded onto a box."
     )
     @GetMapping("/{boxId}/items")
+    @PreAuthorize("hasAuthority('PERMISSION_BOX_READ')")
     public ResponseEntity<?> getLoadedItems(@PathVariable UUID boxId) {
         Result<List<ItemView>, DomainError> result = getLoadedItemsUseCase.execute(boxId);
         if (result.isFailure()) {
@@ -98,6 +102,7 @@ public class BoxController {
             description = "Returns boxes in the IDLE state."
     )
     @GetMapping("/available")
+    @PreAuthorize("hasAuthority('PERMISSION_BOX_READ')")
     public ResponseEntity<List<BoxResponse>> getAvailableBoxes() {
         List<BoxResponse> boxes = getAvailableBoxesUseCase
                 .execute()
@@ -112,6 +117,7 @@ public class BoxController {
             description = "Returns the current battery percentage."
     )
     @GetMapping("/{boxId}/battery")
+    @PreAuthorize("hasAuthority('PERMISSION_BOX_READ')")
     public ResponseEntity<?> getBatteryLevel(@PathVariable UUID boxId) {
         Result<String, DomainError> result = getBatteryLevelUseCase.execute(boxId);
         if (result.isFailure()) {
@@ -125,6 +131,7 @@ public class BoxController {
             description = "Set the box to RETURNING."
     )
     @PostMapping("/{id}/return")
+    @PreAuthorize("hasAuthority('PERMISSION_BOX_RETURN')")
     public ResponseEntity<?> returnBox(@PathVariable UUID id) {
         Result<ReturnBoxResponse, DomainError> result =
                 returnBoxUseCase.execute(id);
@@ -139,6 +146,7 @@ public class BoxController {
             description = "When the box has successfully reached based.."
     )
     @PostMapping("/{id}/returned")
+    @PreAuthorize("hasAuthority('PERMISSION_BOX_RETURNED')")
     public ResponseEntity<?> returnedBox(@PathVariable UUID id) {
         Result<ReturnBoxResponse, DomainError> result =
                 returnedBoxUseCase.execute(id);
