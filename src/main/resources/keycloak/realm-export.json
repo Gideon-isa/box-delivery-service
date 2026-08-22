@@ -3,6 +3,18 @@
   "enabled": true,
   "sslRequired": "none",
   "registrationAllowed": false,
+  "requiredActions": [
+    {
+      "alias": "VERIFY_PROFILE",
+      "name": "Verify Profile",
+      "providerId": "VERIFY_PROFILE",
+      "enabled": false,
+      "defaultAction": false,
+      "priority": 10,
+      "config": {}
+    }
+  ],
+
   "clients": [
     {
       "clientId": "box-delivery-api",
@@ -13,10 +25,60 @@
       "directAccessGrantsEnabled": true,
       "standardFlowEnabled": true,
       "serviceAccountsEnabled": false,
-      "redirectUris": ["*"]
+      "redirectUris": ["*"],
+      "webOrigins": ["http://localhost:8080", "+"]
+    },
+
+    {
+      "id": "dddddddd-dddd-dddd-dddd-dddddddddddd",
+      "clientId": "box-delivery-public",
+      "name": "Box Delivery Public Client",
+      "description": "Public client for Swagger UI / browser-based login -- no client secret, uses PKCE",
+      "enabled": true,
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": ["http://localhost:8080/*", "http://localhost:8081/*"],
+      "webOrigins": ["http://localhost:8080", "+"],
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      }
+    },
+
+    {
+      "id": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+      "clientId": "box-delivery-admin",
+      "name": "Box Delivery Admin",
+      "description": "Service account client used by the Box Delivery API to manage Keycloak users",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "box-delivery-admin-secret",
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "bearerOnly": false,
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "redirectUris": [],
+      "webOrigins": ["http://localhost:8080", "+"],
+      "attributes": {}
     }
   ],
   "users": [
+    {
+      "id": "cccccccc-cccc-cccc-cccc-cccccccccccc",
+      "username": "service-account-box-delivery-admin",
+      "enabled": true,
+      "serviceAccountClientId": "box-delivery-admin",
+      "clientRoles": {
+        "realm-management": ["manage-users", "view-users"]
+      }
+    },
+
     {
       "id": "11111111-1111-1111-1111-111111111111",
       "username": "demo-admin",

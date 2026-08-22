@@ -35,7 +35,7 @@ public class AuthController {
             summary = "Sign up as an Viewer.",
             description = "Sign up as a Viewer"
     )
-    @PostMapping("/signup/viewer")
+    @PostMapping("/signup/VIEWERr")
     public ResponseEntity<SignupResponse> signupView(@Validated({Default.class}) @Valid @RequestBody SignupRequest request) {
         return ResponseEntity.status(201).body(signupService.signup(request, Role.VIEWER));
     }
