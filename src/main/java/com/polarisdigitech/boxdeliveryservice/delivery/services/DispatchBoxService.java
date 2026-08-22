@@ -39,8 +39,7 @@ public class DispatchBoxService implements DispatchBoxUseCase {
     @Transactional
     public Result<DeliveryView, DomainError> execute(DispatchBoxCommand command) {
 
-        //UUID userId = currentUser.getId();
-        UUID userId = UUID.randomUUID();
+        UUID userId = currentUser.getId();
 
         // retrieving box
         Box box = boxRepository.findById(BoxId.of(command.boxId())).orElse(null);

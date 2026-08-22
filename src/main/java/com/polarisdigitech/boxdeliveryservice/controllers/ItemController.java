@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -39,6 +40,7 @@ public class ItemController {
             description = "Creates a new item for delivery."
     )
     @PostMapping
+    @PreAuthorize("hasAuthority('PERMISSION_ITEM_CREATE')")
     public ResponseEntity<?> createItem(@Validated({Default.class}) @Valid @RequestBody CreateItemRequest request, UriComponentsBuilder uriBuilder) {
         CreateItemCommand command = new CreateItemCommand(
                 request.name(), request.weight(), request.code());
@@ -58,6 +60,7 @@ public class ItemController {
             description = "Returns a items that is available ."
     )
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('PERMISSION_ITEM_READ')")
     public ResponseEntity<?> getItem(@PathVariable UUID id) {
         Result<ItemView, DomainError> result = getItemUseCase.execute(id);
         if (result.isFailure()) {
@@ -71,6 +74,7 @@ public class ItemController {
             description = "Delete an item."
     )
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('PERMISSION_ITEM_DELETE')")
     public ResponseEntity<?> deleteItem(@PathVariable UUID id) {
         Result<Boolean, DomainError> result = deleteItemUseCase.execute(id);
         if (result.isFailure()) {
@@ -84,6 +88,7 @@ public class ItemController {
             description = "Retrieves items that are not yet loaded."
     )
     @GetMapping("/available-items")
+    @PreAuthorize("hasAuthority('PERMISSION_ITEM_READ')")
     public ResponseEntity<?> getAvailableItems() {
         Result<List<ItemView>, DomainError> result = availableItemsUseCase.execute();
         if (result.isFailure()) {

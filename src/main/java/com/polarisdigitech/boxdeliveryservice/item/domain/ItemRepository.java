@@ -5,6 +5,7 @@ import com.polarisdigitech.boxdeliveryservice.box.domain.TxRef;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface ItemRepository {
     Item save(Item item);
@@ -19,7 +20,7 @@ public interface ItemRepository {
 
     boolean existsByCode(ItemCode code);
 
-    boolean deleteItemById(ItemId id);
+    boolean deleteItemById(ItemId id, UUID userId);
 
     List<Item> findAllAvailable(ItemStatus status);
 }

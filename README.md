@@ -261,7 +261,7 @@ Hibernate is configured with:
 ddl-auto: validate
 ```
 
-Therefore Hibernate does not create or modify the database schema.
+Therefore, Hibernate does not create or modify the database schema.
 Flyway migrations under:
 
 ``` text

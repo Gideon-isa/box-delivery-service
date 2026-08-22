@@ -1,5 +1,6 @@
 package com.polarisdigitech.boxdeliveryservice.box.services;
 
+import com.polarisdigitech.boxdeliveryservice.application.security.CurrentUser;
 import com.polarisdigitech.boxdeliveryservice.box.domain.Box;
 import com.polarisdigitech.boxdeliveryservice.box.domain.BoxId;
 import com.polarisdigitech.boxdeliveryservice.box.domain.BoxRepository;
@@ -21,6 +22,7 @@ import java.util.UUID;
 public class ReturnedBoxService implements ReturnedBoxUseCase {
 
     private final BoxRepository boxRepository;
+    private final CurrentUser currentUser;
 
     @Transactional
     @Override
@@ -37,6 +39,7 @@ public class ReturnedBoxService implements ReturnedBoxUseCase {
         if (transitionBox.isFailure()) {
             Result.failure(transitionBox.getError());
         }
+        box.markModified(currentUser.getId());
         boxRepository.save(box);
         return Result.success(ReturnBoxResponse.to("Box has returned to base. State moved to IDLE "));
     }

@@ -1,5 +1,6 @@
 package com.polarisdigitech.boxdeliveryservice.box.services;
 
+import com.polarisdigitech.boxdeliveryservice.application.security.CurrentUser;
 import com.polarisdigitech.boxdeliveryservice.box.domain.Box;
 import com.polarisdigitech.boxdeliveryservice.box.domain.BoxId;
 import com.polarisdigitech.boxdeliveryservice.box.domain.BoxRepository;
@@ -27,6 +28,7 @@ public class LoadBoxService implements LoadBoxUseCase {
 
     private final BoxRepository boxRepository;
     private final ItemRepository itemRepository;
+    private final CurrentUser currentUser;
 
     @Override
     @Transactional
@@ -67,8 +69,10 @@ public class LoadBoxService implements LoadBoxUseCase {
         if (loadResult.isFailure()) {
             return Result.failure(loadResult.getError());
         }
+        Box loadedbox = loadResult.getValue();
+        loadedbox.markModified(currentUser.getId());
 
-        Box savedBox = boxRepository.save(loadResult.getValue());
+        Box savedBox = boxRepository.save(loadedbox);
         itemRepository.saveAll(assignedItems);
 
         return Result.success(LoadBoxResponse.from(savedBox));

@@ -18,17 +18,13 @@ public final class DispatchService {
         if (flightResult.isFailure()) {
             return Result.failure(flightResult.getError());
         }
-
         Duration flightEstimate =  flightResult.getValue().estimatedTravelTime();
         Instant locationArrivalTime = Instant.now().plus(flightEstimate);
         Instant departureTime = Instant.now();
-
         Result<FlightRoundTrip, DomainError> roundTripResult =  FlightRoundTrip.build(locationArrivalTime,  departureTime);
         if (roundTripResult.isFailure()) {
             return Result.failure(roundTripResult.getError());
         }
-        
         return Result.success(roundTripResult.getValue());
     }
-
 }
